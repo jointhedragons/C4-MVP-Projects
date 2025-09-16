@@ -1,0 +1,70 @@
+{
+    "meetings": [
+        {
+            "id": "meeting-1",
+            "title": "Morning Standup",
+            "participants": [
+                "Alice",
+                "Bob",
+                "Charlie"
+            ],
+            "duration": 30,
+            "importance": 4,
+            "urgency": "high"
+        },
+        {
+            "id": "meeting-2",
+            "title": "Client Presentation",
+            "participants": [
+                "Alice",
+                "David"
+            ],
+            "duration": 60,
+            "importance": 5,
+            "urgency": "high"
+        },
+        {
+            "id": "meeting-3",
+            "title": "Code Review",
+            "participants": [
+                "Bob",
+                "Charlie"
+            ],
+            "duration": 45,
+            "importance": 3,
+            "urgency": "medium"
+        }
+    ],
+    "availability": {
+        "Alice": [
+            [
+                "09:00",
+                "17:00"
+            ]
+        ],
+        "Bob": [
+            [
+                "10:00",
+                "16:00"
+            ]
+        ],
+        "Charlie": [
+            [
+                "08:00",
+                "12:00"
+            ],
+            [
+                "14:00",
+                "18:00"
+            ]
+        ],
+        "David": [
+            [
+                "13:00",
+                "17:00"
+            ]
+        ]
+    },
+    "query": "morning standup first, then client presentation, flexible for code review",
+    "optimizationMethod": "greedy"
+}

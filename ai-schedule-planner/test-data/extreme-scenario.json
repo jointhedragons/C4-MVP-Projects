@@ -1,0 +1,146 @@
+{
+    "meetings": [
+        {
+            "id": "meeting-1",
+            "title": "Executive Meeting",
+            "participants": [
+                "CEO",
+                "CTO",
+                "CFO"
+            ],
+            "duration": 120,
+            "importance": 5,
+            "urgency": "high"
+        },
+        {
+            "id": "meeting-2",
+            "title": "Product Demo",
+            "participants": [
+                "CTO",
+                "Product Manager",
+                "Designer"
+            ],
+            "duration": 90,
+            "importance": 4,
+            "urgency": "high"
+        },
+        {
+            "id": "meeting-3",
+            "title": "Budget Review",
+            "participants": [
+                "CFO",
+                "Finance Team"
+            ],
+            "duration": 60,
+            "importance": 4,
+            "urgency": "medium"
+        },
+        {
+            "id": "meeting-4",
+            "title": "Sprint Planning",
+            "participants": [
+                "Product Manager",
+                "Designer",
+                "Developer1",
+                "Developer2"
+            ],
+            "duration": 120,
+            "importance": 3,
+            "urgency": "medium"
+        },
+        {
+            "id": "meeting-5",
+            "title": "Code Review",
+            "participants": [
+                "Developer1",
+                "Developer2"
+            ],
+            "duration": 45,
+            "importance": 2,
+            "urgency": "low"
+        },
+        {
+            "id": "meeting-6",
+            "title": "Client Call",
+            "participants": [
+                "CEO",
+                "Product Manager"
+            ],
+            "duration": 60,
+            "importance": 5,
+            "urgency": "high"
+        }
+    ],
+    "availability": {
+        "CEO": [
+            [
+                "09:00",
+                "11:00"
+            ],
+            [
+                "14:00",
+                "16:00"
+            ]
+        ],
+        "CTO": [
+            [
+                "10:00",
+                "12:00"
+            ],
+            [
+                "15:00",
+                "17:00"
+            ]
+        ],
+        "CFO": [
+            [
+                "09:00",
+                "12:00"
+            ],
+            [
+                "13:00",
+                "16:00"
+            ]
+        ],
+        "Product Manager": [
+            [
+                "08:00",
+                "12:00"
+            ],
+            [
+                "14:00",
+                "18:00"
+            ]
+        ],
+        "Designer": [
+            [
+                "09:00",
+                "13:00"
+            ],
+            [
+                "15:00",
+                "17:00"
+            ]
+        ],
+        "Developer1": [
+            [
+                "10:00",
+                "16:00"
+            ]
+        ],
+        "Developer2": [
+            [
+                "09:00",
+                "15:00"
+            ]
+        ],
+        "Finance Team": [
+            [
+                "13:00",
+                "17:00"
+            ]
+        ]
+    },
+    "query": "executive meetings first, then product demos, flexible for development meetings",
+    "optimizationMethod": "genetic"
+}

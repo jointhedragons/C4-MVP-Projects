@@ -36,6 +36,10 @@ function MultiMeetingDashboard() {
   const [error, setError] = useState(null);
   const [activeStep, setActiveStep] = useState('meetings');
 
+  // New state variables
+  const [conflictResults, setConflictResults] = useState(null);
+  const [suggestionResults, setSuggestionResults] = useState(null);
+
   const availableParticipants = availability && typeof availability === 'object' 
     ? Object.keys(availability) 
     : [];
@@ -54,11 +58,9 @@ function MultiMeetingDashboard() {
 
   const updateMeeting = (index, updatedMeeting) => {
     if (!updatedMeeting || index < 0) return;
-    
     setMeetings((prevMeetings) => {
       const currentMeetings = prevMeetings || [];
       if (index >= currentMeetings.length) return currentMeetings;
-      
       const newMeetings = [...currentMeetings];
       newMeetings[index] = { ...updatedMeeting, id: updatedMeeting.id || `meeting-${Date.now()}` };
       return newMeetings;
@@ -67,7 +69,6 @@ function MultiMeetingDashboard() {
 
   const deleteMeeting = (index) => {
     if (index < 0) return;
-    
     setMeetings((prevMeetings) => {
       const currentMeetings = prevMeetings || [];
       return currentMeetings.filter((_, i) => i !== index);
@@ -112,6 +113,7 @@ function MultiMeetingDashboard() {
   const handleAnalyzeConflicts = async () => {
     setError(null);
     setLoading(true);
+    setConflictResults(null);
 
     try {
       const validMeetings = (meetings || []).filter(m => 
@@ -122,9 +124,8 @@ function MultiMeetingDashboard() {
       );
 
       const conflictData = await analyzeConflicts(validMeetings, availability);
-      
-      // Show conflict analysis in a simple alert for now
-      alert(`Conflict Analysis Complete:\n\nTotal Meetings: ${conflictData.totalMeetings}\nMeetings with Slots: ${conflictData.meetingsWithSlots}\nPotential Conflicts: ${conflictData.potentialConflicts.length}\n\nRecommendations:\n${conflictData.recommendations.join('\n')}`);
+      setConflictResults(conflictData);
+      setActiveStep('conflicts');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -135,6 +136,7 @@ function MultiMeetingDashboard() {
   const handleGetSuggestions = async () => {
     setError(null);
     setLoading(true);
+    setSuggestionResults(null);
 
     try {
       const validMeetings = (meetings || []).filter(m => 
@@ -145,18 +147,8 @@ function MultiMeetingDashboard() {
       );
 
       const suggestions = await getOptimizationSuggestions(validMeetings, availability);
-      
-      // Show suggestions in a simple alert for now
-      const suggestionText = [
-        'Meeting Optimizations:',
-        ...suggestions.meetingOptimizations.map(m => `• ${m.meetingTitle}: ${m.suggestions.map(s => s.message).join(', ')}`),
-        '\nSchedule Optimizations:',
-        ...suggestions.scheduleOptimizations.map(s => `• ${s.message}`),
-        '\nResource Optimizations:',
-        ...suggestions.resourceOptimizations.map(s => `• ${s.message}`)
-      ].join('\n');
-      
-      alert(suggestionText);
+      setSuggestionResults(suggestions);
+      setActiveStep('suggestions');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -168,7 +160,19 @@ function MultiMeetingDashboard() {
     setActiveStep('meetings');
     setResults(null);
     setError(null);
+    setConflictResults(null);
+    setSuggestionResults(null);
   };
+
+  // Step navigation order
+  const steps = [
+    { key: 'meetings', label: '1. Meetings' },
+    { key: 'availability', label: '2. Availability' },
+    { key: 'optimize', label: '3. Optimize' },
+    { key: 'conflicts', label: '4. Conflicts', show: !!conflictResults },
+    { key: 'suggestions', label: '5. Suggestions', show: !!suggestionResults },
+    { key: 'results', label: '6. Results', show: !!results },
+  ];
 
   return (
     <div className="max-w-7xl mx-auto p-6">
@@ -184,53 +188,29 @@ function MultiMeetingDashboard() {
       {/* Step Navigation */}
       <div className="flex items-center justify-center mb-8">
         <div className="flex items-center space-x-4">
-          <button
-            onClick={() => setActiveStep('meetings')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeStep === 'meetings'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            1. Meetings
-          </button>
-          <div className="w-8 h-0.5 bg-gray-300"></div>
-          <button
-            onClick={() => setActiveStep('availability')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeStep === 'availability'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            2. Availability
-          </button>
-          <div className="w-8 h-0.5 bg-gray-300"></div>
-          <button
-            onClick={() => setActiveStep('optimize')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeStep === 'optimize'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            3. Optimize
-          </button>
-          {results && (
-            <>
-              <div className="w-8 h-0.5 bg-gray-300"></div>
+          {steps.filter(s => s.show === undefined || s.show).map((step, idx, arr) => (
+            <React.Fragment key={step.key}>
               <button
-                onClick={() => setActiveStep('results')}
+                onClick={() => setActiveStep(step.key)}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  activeStep === 'results'
-                    ? 'bg-green-600 text-white'
+                  activeStep === step.key
+                    ? (step.key === 'results'
+                        ? 'bg-green-600 text-white'
+                        : step.key === 'conflicts'
+                        ? 'bg-yellow-600 text-white'
+                        : step.key === 'suggestions'
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-blue-600 text-white')
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                4. Results
+                {step.label}
               </button>
-            </>
-          )}
+              {idx < arr.length - 1 && (
+                <div className="w-8 h-0.5 bg-gray-300"></div>
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </div>
 
@@ -389,6 +369,92 @@ function MultiMeetingDashboard() {
             >
               {loading ? 'Optimizing...' : 'Optimize Schedule'}
             </button>
+          </div>
+        </div>
+      )}
+
+      {activeStep === 'conflicts' && conflictResults && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold text-yellow-700">Conflict Analysis</h2>
+            <button
+              onClick={() => setActiveStep('optimize')}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Back to Optimize
+            </button>
+          </div>
+          <div className="bg-yellow-50 p-6 rounded-lg shadow">
+            <div className="mb-4">
+              <span className="font-semibold">Total Meetings:</span> {conflictResults.totalMeetings}
+            </div>
+            <div className="mb-4">
+              <span className="font-semibold">Meetings with Slots:</span> {conflictResults.meetingsWithSlots}
+            </div>
+            <div className="mb-4">
+              <span className="font-semibold">Potential Conflicts:</span> {conflictResults.potentialConflicts.length}
+              <ul className="list-disc ml-6 mt-2 text-sm text-yellow-800">
+                {conflictResults.potentialConflicts.map((conflict, idx) => (
+                  <li key={idx}>{conflict}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <span className="font-semibold">Recommendations:</span>
+              <ul className="list-disc ml-6 mt-2 text-sm text-yellow-800">
+                {conflictResults.recommendations.map((rec, idx) => (
+                  <li key={idx}>{rec}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeStep === 'suggestions' && suggestionResults && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold text-purple-700">AI Suggestions</h2>
+            <button
+              onClick={() => setActiveStep('optimize')}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Back to Optimize
+            </button>
+          </div>
+          <div className="bg-purple-50 p-6 rounded-lg shadow">
+            <div className="mb-4">
+              <h3 className="font-semibold text-purple-800 mb-2">Meeting Optimizations</h3>
+              <ul className="list-disc ml-6 text-sm text-purple-900">
+                {suggestionResults.meetingOptimizations.map((m, idx) => (
+                  <li key={idx}>
+                    <span className="font-semibold">{m.meetingTitle}:</span>{" "}
+                    {m.suggestions.map((s, i) => (
+                      <span key={i}>
+                        {s.message}
+                        {i < m.suggestions.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mb-4">
+              <h3 className="font-semibold text-purple-800 mb-2">Schedule Optimizations</h3>
+              <ul className="list-disc ml-6 text-sm text-purple-900">
+                {suggestionResults.scheduleOptimizations.map((s, idx) => (
+                  <li key={idx}>{s.message}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-purple-800 mb-2">Resource Optimizations</h3>
+              <ul className="list-disc ml-6 text-sm text-purple-900">
+                {suggestionResults.resourceOptimizations.map((s, idx) => (
+                  <li key={idx}>{s.message}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       )}

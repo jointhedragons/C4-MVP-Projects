@@ -1,19 +1,44 @@
 import React, { useState } from 'react';
 
 function AvailabilityInput({ value, onChange, onLoadExample }) {
-  const [jsonInput, setJsonInput] = useState(JSON.stringify(value, null, 2));
-  const [jsonError, setJsonError] = useState(null);
+  const [availability, setAvailability] = useState(value || {});
 
-  const handleJsonChange = (newJson) => {
-    setJsonInput(newJson);
-    setJsonError(null);
-
-    try {
-      const parsed = JSON.parse(newJson);
-      onChange(parsed);
-    } catch (error) {
-      setJsonError('Invalid JSON format');
+  const handleAddPerson = () => {
+    const name = prompt("Enter person's name:");
+    if (name && !availability[name]) {
+      const updated = { ...availability, [name]: [] };
+      setAvailability(updated);
+      onChange(updated);
     }
+  };
+
+  const handleAddTime = (person) => {
+    const start = prompt(`Enter start time for ${person} (HH:MM):`);
+    const end = prompt(`Enter end time for ${person} (HH:MM):`);
+    if (start && end) {
+      const updated = {
+        ...availability,
+        [person]: [...availability[person], [start, end]]
+      };
+      setAvailability(updated);
+      onChange(updated);
+    }
+  };
+
+  const handleRemoveTime = (person, index) => {
+    const updated = {
+      ...availability,
+      [person]: availability[person].filter((_, i) => i !== index)
+    };
+    setAvailability(updated);
+    onChange(updated);
+  };
+
+  const handleRemovePerson = (person) => {
+    const updated = { ...availability };
+    delete updated[person];
+    setAvailability(updated);
+    onChange(updated);
   };
 
   const handleLoadExample = () => {
@@ -22,55 +47,65 @@ function AvailabilityInput({ value, onChange, onLoadExample }) {
       "Bob": [["12:00", "20:00"]],
       "Charlie": [["08:00", "12:00"], ["14:00", "18:00"]]
     };
-    setJsonInput(JSON.stringify(example, null, 2));
+    setAvailability(example);
     onChange(example);
-    setJsonError(null);
   };
 
   return (
-    <div>
-      <div className="mb-3">
-        <label htmlFor="availability" className="block text-sm font-medium text-gray-700 mb-2">
-          Enter team availability in JSON format:
-        </label>
-        <textarea
-          id="availability"
-          value={jsonInput}
-          onChange={(e) => handleJsonChange(e.target.value)}
-          className={`w-full h-48 p-3 border rounded-lg font-mono text-sm ${
-            jsonError ? 'border-red-300 bg-red-50' : 'border-gray-300 focus:border-primary-500'
-          } focus:outline-none focus:ring-1 focus:ring-primary-500`}
-          placeholder='{
-  "Alice": [["09:00", "17:00"]],
-  "Bob": [["12:00", "20:00"]],
-  "Charlie": [["08:00", "12:00"], ["14:00", "18:00"]]
-}'
-        />
-        {jsonError && (
-          <p className="mt-1 text-sm text-red-600">{jsonError}</p>
-        )}
-      </div>
-
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button
+          onClick={handleAddPerson}
+          className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded"
+        >
+          ➕ Add Person
+        </button>
         <button
           onClick={handleLoadExample}
-          className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors"
+          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded"
         >
-          Load Example
+          📄 Load Example
         </button>
-        <span className="text-xs text-gray-500 self-center">
-          Format: {"{"} "Name": [["start", "end"], ["start", "end"]] {"}"}
-        </span>
       </div>
 
-      <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-        <h4 className="text-sm font-medium text-blue-800 mb-1">Format Guide:</h4>
-        <ul className="text-xs text-blue-700 space-y-1">
-          <li>• Use 24-hour format (e.g., "09:00", "17:30")</li>
-          <li>• Each person can have multiple time ranges</li>
-          <li>• Times should be in UTC</li>
-          <li>• Start time must be before end time</li>
-        </ul>
+      <div className="space-y-3">
+        {Object.keys(availability).map((person) => (
+          <div key={person} className="p-3 border rounded-lg bg-white shadow">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-semibold text-gray-800">{person}</h3>
+              <button
+                onClick={() => handleRemovePerson(person)}
+                className="text-red-500 text-sm hover:underline"
+              >
+                Remove Person
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              {availability[person].map(([start, end], index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center bg-gray-50 p-2 rounded"
+                >
+                  <span className="text-sm">{start} → {end}</span>
+                  <button
+                    onClick={() => handleRemoveTime(person, index)}
+                    className="text-xs text-red-500 hover:underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => handleAddTime(person)}
+              className="mt-2 px-2 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded"
+            >
+              ➕ Add Time
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

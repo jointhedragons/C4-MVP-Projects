@@ -11,7 +11,7 @@
 
 **AI Schedule Planner** is a sophisticated full-stack application that helps project managers and team leads schedule multiple meetings simultaneously while optimizing for participant availability, priorities, and resource constraints.
 
-**Built by:** Ahmed Khaled Abdel Fattah  
+**Built by:** Ahmed Khaled Abdel Fattah , Mohamed Ahmed Fathy
 **Timeline:** 3-day MVP (2025-09-16 to 2025-09-18)  
 **Status:** ✅ Production Ready
 

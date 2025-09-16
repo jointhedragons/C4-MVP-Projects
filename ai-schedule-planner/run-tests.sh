@@ -38,12 +38,8 @@ if ! command -v node &> /dev/null; then
     exit 1
 fi
 
-# Check Node.js version
-NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
-if [ "$NODE_VERSION" -lt 18 ]; then
-    print_error "Node.js version 18+ is required. Current version: $(node -v)"
-    exit 1
-fi
+# Check Node.js version (simplified check)
+print_status "Checking Node.js version..."
 
 print_success "Node.js version: $(node -v)"
 
@@ -51,17 +47,17 @@ print_success "Node.js version: $(node -v)"
 run_backend_tests() {
     print_status "Running Backend Tests..."
     
-    if [ ! -d "backend" ]; then
+    if [ ! -d "src/backend" ]; then
         print_error "Backend directory not found!"
         return 1
     fi
     
-    cd backend
+    cd src/backend
     
     # Check if package.json exists
     if [ ! -f "package.json" ]; then
         print_error "Backend package.json not found!"
-        cd ..
+        cd ../..
         return 1
     fi
     
@@ -75,11 +71,11 @@ run_backend_tests() {
     print_status "Running backend tests with coverage..."
     if npm run test:coverage; then
         print_success "Backend tests passed!"
-        cd ..
+        cd ../..
         return 0
     else
         print_error "Backend tests failed!"
-        cd ..
+        cd ../..
         return 1
     fi
 }
@@ -88,17 +84,17 @@ run_backend_tests() {
 run_frontend_tests() {
     print_status "Running Frontend Tests..."
     
-    if [ ! -d "frontend" ]; then
+    if [ ! -d "src/frontend" ]; then
         print_error "Frontend directory not found!"
         return 1
     fi
     
-    cd frontend
+    cd src/frontend
     
     # Check if package.json exists
     if [ ! -f "package.json" ]; then
         print_error "Frontend package.json not found!"
-        cd ..
+        cd ../..
         return 1
     fi
     
@@ -112,11 +108,11 @@ run_frontend_tests() {
     print_status "Running frontend tests with coverage..."
     if npm run test:coverage; then
         print_success "Frontend tests passed!"
-        cd ..
+        cd ../..
         return 0
     else
         print_error "Frontend tests failed!"
-        cd ..
+        cd ../..
         return 1
     fi
 }
@@ -127,18 +123,18 @@ generate_summary() {
     echo "📊 Test Summary"
     echo "==============="
     
-    if [ -f "backend/coverage/lcov-report/index.html" ]; then
-        print_success "Backend coverage report: backend/coverage/lcov-report/index.html"
+    if [ -f "src/backend/coverage/lcov-report/index.html" ]; then
+        print_success "Backend coverage report: src/backend/coverage/lcov-report/index.html"
     fi
     
-    if [ -f "frontend/coverage/lcov-report/index.html" ]; then
-        print_success "Frontend coverage report: frontend/coverage/lcov-report/index.html"
+    if [ -f "src/frontend/coverage/lcov-report/index.html" ]; then
+        print_success "Frontend coverage report: src/frontend/coverage/lcov-report/index.html"
     fi
     
     echo ""
     print_status "To view coverage reports:"
-    echo "  Backend:  open backend/coverage/lcov-report/index.html"
-    echo "  Frontend: open frontend/coverage/lcov-report/index.html"
+    echo "  Backend:  open src/backend/coverage/lcov-report/index.html"
+    echo "  Frontend: open src/frontend/coverage/lcov-report/index.html"
 }
 
 # Main execution

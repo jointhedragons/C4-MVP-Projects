@@ -13,8 +13,22 @@ import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
 
 function MultiMeetingDashboard() {
-  const [meetings, setMeetings] = useState(getExampleMeetings());
-  const [availability, setAvailability] = useState(getExampleAvailability());
+  const [meetings, setMeetings] = useState(() => {
+    try {
+      return getExampleMeetings() || [];
+    } catch (error) {
+      return [];
+    }
+  });
+  
+  const [availability, setAvailability] = useState(() => {
+    try {
+      return getExampleAvailability() || {};
+    } catch (error) {
+      return {};
+    }
+  });
+  
   const [query, setQuery] = useState('');
   const [optimizationMethod, setOptimizationMethod] = useState('greedy');
   const [results, setResults] = useState(null);
@@ -22,7 +36,9 @@ function MultiMeetingDashboard() {
   const [error, setError] = useState(null);
   const [activeStep, setActiveStep] = useState('meetings');
 
-  const availableParticipants = Object.keys(availability);
+  const availableParticipants = availability && typeof availability === 'object' 
+    ? Object.keys(availability) 
+    : [];
 
   const addMeeting = () => {
     const newMeeting = {
@@ -33,18 +49,29 @@ function MultiMeetingDashboard() {
       importance: 3,
       urgency: 'medium',
     };
-    setMeetings([...meetings, newMeeting]);
+    setMeetings((prevMeetings) => [...(prevMeetings || []), newMeeting]);
   };
 
   const updateMeeting = (index, updatedMeeting) => {
-    const newMeetings = [...meetings];
-    newMeetings[index] = { ...updatedMeeting, id: updatedMeeting.id || `meeting-${Date.now()}` };
-    setMeetings(newMeetings);
+    if (!updatedMeeting || index < 0) return;
+    
+    setMeetings((prevMeetings) => {
+      const currentMeetings = prevMeetings || [];
+      if (index >= currentMeetings.length) return currentMeetings;
+      
+      const newMeetings = [...currentMeetings];
+      newMeetings[index] = { ...updatedMeeting, id: updatedMeeting.id || `meeting-${Date.now()}` };
+      return newMeetings;
+    });
   };
 
   const deleteMeeting = (index) => {
-    const newMeetings = meetings.filter((_, i) => i !== index);
-    setMeetings(newMeetings);
+    if (index < 0) return;
+    
+    setMeetings((prevMeetings) => {
+      const currentMeetings = prevMeetings || [];
+      return currentMeetings.filter((_, i) => i !== index);
+    });
   };
 
   const handleOptimize = async () => {
@@ -52,10 +79,11 @@ function MultiMeetingDashboard() {
     setResults(null);
 
     // Validate meetings
-    const validMeetings = meetings.filter(m => 
-      m.title && 
+    const validMeetings = (meetings || []).filter(m => 
+      m && m.title && 
+      Array.isArray(m.participants) &&
       m.participants.length > 0 && 
-      m.participants.every(p => p.trim() !== '')
+      m.participants.every(p => p && p.trim() !== '')
     );
 
     if (validMeetings.length === 0) {
@@ -86,14 +114,14 @@ function MultiMeetingDashboard() {
     setLoading(true);
 
     try {
-      const validMeetings = meetings.filter(m => 
-        m.title && 
+      const validMeetings = (meetings || []).filter(m => 
+        m && m.title && 
+        Array.isArray(m.participants) &&
         m.participants.length > 0 && 
-        m.participants.every(p => p.trim() !== '')
+        m.participants.every(p => p && p.trim() !== '')
       );
 
       const conflictData = await analyzeConflicts(validMeetings, availability);
-      console.log('Conflict Analysis:', conflictData);
       
       // Show conflict analysis in a simple alert for now
       alert(`Conflict Analysis Complete:\n\nTotal Meetings: ${conflictData.totalMeetings}\nMeetings with Slots: ${conflictData.meetingsWithSlots}\nPotential Conflicts: ${conflictData.potentialConflicts.length}\n\nRecommendations:\n${conflictData.recommendations.join('\n')}`);
@@ -109,14 +137,14 @@ function MultiMeetingDashboard() {
     setLoading(true);
 
     try {
-      const validMeetings = meetings.filter(m => 
-        m.title && 
+      const validMeetings = (meetings || []).filter(m => 
+        m && m.title && 
+        Array.isArray(m.participants) &&
         m.participants.length > 0 && 
-        m.participants.every(p => p.trim() !== '')
+        m.participants.every(p => p && p.trim() !== '')
       );
 
       const suggestions = await getOptimizationSuggestions(validMeetings, availability);
-      console.log('Optimization Suggestions:', suggestions);
       
       // Show suggestions in a simple alert for now
       const suggestionText = [
@@ -223,10 +251,10 @@ function MultiMeetingDashboard() {
           </div>
 
           <div className="space-y-4">
-            {meetings.map((meeting, index) => (
+            {(meetings || []).map((meeting, index) => (
               <MeetingInput
-                key={meeting.id || index}
-                meeting={meeting}
+                key={meeting?.id || `meeting-${index}`}
+                meeting={meeting || {}}
                 onChange={(updatedMeeting) => updateMeeting(index, updatedMeeting)}
                 onDelete={() => deleteMeeting(index)}
                 availableParticipants={availableParticipants}
@@ -337,9 +365,9 @@ function MultiMeetingDashboard() {
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-blue-800 mb-2">Summary</h3>
                 <div className="text-sm text-blue-700">
-                  <div>Meetings: {meetings.length}</div>
+                  <div>Meetings: {(meetings || []).length}</div>
                   <div>Participants: {availableParticipants.length}</div>
-                  <div>Method: {optimizationMethod}</div>
+                  <div>Method: {optimizationMethod || 'greedy'}</div>
                 </div>
               </div>
             </div>

@@ -1,0 +1,35 @@
+{
+    "name": "ai-schedule-planner-backend",
+    "version": "1.0.0",
+    "description": "Backend API for AI Schedule Planner MVP",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage"
+    },
+    "keywords": [
+        "scheduling",
+        "ai",
+        "meeting",
+        "calendar"
+    ],
+    "author": "AI Schedule Planner Team",
+    "license": "MIT",
+    "dependencies": {
+        "@google/generative-ai": "^0.2.1",
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.2",
+        "express": "^4.18.2"
+    },
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "nodemon": "^3.0.2",
+        "supertest": "^6.3.3"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

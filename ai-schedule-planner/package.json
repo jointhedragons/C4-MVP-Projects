@@ -1,0 +1,19 @@
+{
+  "name": "ai-schedule-planner-mvp",
+  "version": "2.0.0",
+  "description": "AI-powered multi-meeting optimization engine for 3-day MVP project",
+  "scripts": {
+    "install-all": "cd src/backend && npm install && cd ../frontend && npm install",
+    "start-backend": "cd src/backend && node index.js",
+    "start-frontend": "cd src/frontend && npm start",
+    "test": "./run-tests.sh",
+    "test-backend": "cd src/backend && npm test",
+    "dev": "concurrently \"npm run start-backend\" \"npm run start-frontend\""
+  },
+  "keywords": ["ai", "scheduling", "optimization", "mvp", "meetings"],
+  "author": "Ahmed Khaled Abdel Fattah",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

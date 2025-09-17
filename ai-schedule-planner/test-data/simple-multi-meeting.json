@@ -1,0 +1,52 @@
+{
+    "meetings": [
+        {
+            "id": "meeting-1",
+            "title": "Product Planning",
+            "participants": [
+                "Alice",
+                "Bob"
+            ],
+            "duration": 60,
+            "importance": 4,
+            "urgency": "high"
+        },
+        {
+            "id": "meeting-2",
+            "title": "Team Standup",
+            "participants": [
+                "Alice",
+                "Charlie"
+            ],
+            "duration": 30,
+            "importance": 3,
+            "urgency": "medium"
+        }
+    ],
+    "availability": {
+        "Alice": [
+            [
+                "09:00",
+                "17:00"
+            ]
+        ],
+        "Bob": [
+            [
+                "10:00",
+                "16:00"
+            ]
+        ],
+        "Charlie": [
+            [
+                "08:00",
+                "12:00"
+            ],
+            [
+                "14:00",
+                "18:00"
+            ]
+        ]
+    },
+    "query": "morning meetings preferred",
+    "optimizationMethod": "greedy"
+}

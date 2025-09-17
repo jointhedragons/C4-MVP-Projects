@@ -1,0 +1,92 @@
+{
+    "meetings": [
+        {
+            "id": "meeting-1",
+            "title": "Product Planning",
+            "participants": [
+                "Alice",
+                "Bob",
+                "Charlie"
+            ],
+            "duration": 90,
+            "importance": 5,
+            "urgency": "high"
+        },
+        {
+            "id": "meeting-2",
+            "title": "Team Standup",
+            "participants": [
+                "Alice",
+                "Bob"
+            ],
+            "duration": 30,
+            "importance": 3,
+            "urgency": "medium"
+        },
+        {
+            "id": "meeting-3",
+            "title": "Client Review",
+            "participants": [
+                "Charlie",
+                "David"
+            ],
+            "duration": 60,
+            "importance": 4,
+            "urgency": "high"
+        },
+        {
+            "id": "meeting-4",
+            "title": "Sprint Retrospective",
+            "participants": [
+                "Alice",
+                "Charlie",
+                "Eve"
+            ],
+            "duration": 60,
+            "importance": 3,
+            "urgency": "low"
+        }
+    ],
+    "availability": {
+        "Alice": [
+            [
+                "09:00",
+                "12:00"
+            ],
+            [
+                "14:00",
+                "17:00"
+            ]
+        ],
+        "Bob": [
+            [
+                "10:00",
+                "16:00"
+            ]
+        ],
+        "Charlie": [
+            [
+                "08:00",
+                "11:00"
+            ],
+            [
+                "13:00",
+                "18:00"
+            ]
+        ],
+        "David": [
+            [
+                "13:00",
+                "17:00"
+            ]
+        ],
+        "Eve": [
+            [
+                "09:00",
+                "15:00"
+            ]
+        ]
+    },
+    "query": "urgent meetings first, then flexible scheduling",
+    "optimizationMethod": "genetic"
+}

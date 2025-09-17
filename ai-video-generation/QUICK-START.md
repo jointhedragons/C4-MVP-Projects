@@ -40,7 +40,7 @@
 - [ ] Prepare presentation
 
 ## Branch Naming Convention
-Use: `Yousef Bakier_AI-Video-Generation_1_PROJ-G`
+Use: `Yousef-Bakier_AI-Video-Generation_1_PROJ-G`
 
 ## Commit Message Format
 `[PROJ-G] Your commit message here`

@@ -1,8 +1,13 @@
 import { Outlet } from "react-router";
+import { Navigation } from "../components/Navigation";
+import { useState } from "react";
 
 function AppLayout() {
+  const [currentPage, setCurrentPage] = useState("dashboard");
+
   return (
-    <main className="pt-12">
+    <main className="">
+      <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <Outlet />
     </main>
   );

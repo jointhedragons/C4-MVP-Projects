@@ -141,8 +141,10 @@ function MultiMeetingResults({ results, onReschedule }) {
                         {meeting.title}
                       </h3>
                       {meeting.urgency && (
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getUrgencyColor(meeting.urgency)}`}>
-                          {meeting.urgency.toUpperCase()}
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full border ${getUrgencyColor(meeting.urgency)}`}
+                        >
+                          {(meeting.urgency || '').toUpperCase()}
                         </span>
                       )}
                       {meeting.priority && (
@@ -204,8 +206,10 @@ function MultiMeetingResults({ results, onReschedule }) {
                         {meeting.title}
                       </h3>
                       {meeting.urgency && (
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getUrgencyColor(meeting.urgency)}`}>
-                          {meeting.urgency.toUpperCase()}
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full border ${getUrgencyColor(meeting.urgency)}`}
+                        >
+                          {(meeting.urgency || '').toUpperCase()}
                         </span>
                       )}
                     </div>
@@ -243,8 +247,10 @@ function MultiMeetingResults({ results, onReschedule }) {
                       <h3 className="text-lg font-semibold text-gray-800">
                         {conflict.type === 'participant_conflict' ? 'Participant Conflict' : 'Time Conflict'}
                       </h3>
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getConflictSeverityColor(conflict.severity)}`}>
-                        {conflict.severity.toUpperCase()}
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded-full border ${getConflictSeverityColor(conflict.severity)}`}
+                      >
+                        {(conflict.severity || '').toUpperCase()}
                       </span>
                     </div>
                   </div>

@@ -1,41 +1,35 @@
 import React, { useState } from "react";
 import { Briefcase, Mail, Lock, UserCheck, Building } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
 
 function Signup() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "",
-  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    trigger,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
     setError("");
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
     setLoading(true);
 
-    // try {
-    //   await signUp(formData.email, formData.password, formData.role);
-    // } catch (error: any) {
-    //   setError(error.message);
-    // } finally {
-    //   setLoading(false);
-    // }
+    // Simulate signup
+    setTimeout(() => {
+      console.log("Form submitted:", data);
+      setLoading(false);
+      navigate("/dashboard"); // example redirect
+    }, 1500);
   };
+
+  const password = watch("password");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -54,7 +48,11 @@ function Signup() {
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form
+          className="mt-8 space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
           <div className="space-y-4">
             {/* Role Selection */}
             <div>
@@ -64,9 +62,12 @@ function Signup() {
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
-                  onClick={() => setFormData({ ...formData, role: "talent" })}
+                  onClick={() => {
+                    setValue("role", "talent", { shouldValidate: true });
+                    trigger("role");
+                  }}
                   className={`flex items-center justify-center p-4 border-2 rounded-lg transition-all ${
-                    formData.role === "talent"
+                    watch("role") === "talent"
                       ? "border-blue-500 bg-blue-50 text-blue-700"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
@@ -76,9 +77,12 @@ function Signup() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFormData({ ...formData, role: "hr" })}
+                  onClick={() => {
+                    setValue("role", "hr", { shouldValidate: true });
+                    trigger("role");
+                  }}
                   className={`flex items-center justify-center p-4 border-2 rounded-lg transition-all ${
-                    formData.role === "hr"
+                    watch("role") === "hr"
                       ? "border-purple-500 bg-purple-50 text-purple-700"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
@@ -87,6 +91,15 @@ function Signup() {
                   HR / Recruiter
                 </button>
               </div>
+              <input
+                type="hidden"
+                {...register("role", { required: "Please select a role" })}
+              />
+              {errors.role && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.role.message}
+                </p>
+              )}
             </div>
 
             {/* Email */}
@@ -103,18 +116,24 @@ function Signup() {
                 </div>
                 <input
                   id="email"
-                  name="email"
                   type="email"
                   autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Enter a valid email",
+                    },
+                  })}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
+              {errors.email && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Password */}
@@ -131,18 +150,24 @@ function Signup() {
                 </div>
                 <input
                   id="password"
-                  name="password"
                   type="password"
                   autoComplete="new-password"
-                  required
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Create a password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
+              {errors.password && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             {/* Confirm Password */}
@@ -159,21 +184,22 @@ function Signup() {
                 </div>
                 <input
                   id="confirmPassword"
-                  name="confirmPassword"
                   type="password"
                   autoComplete="new-password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      confirmPassword: e.target.value,
-                    })
-                  }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Confirm your password"
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
+                  })}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
+              {errors.confirmPassword && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -194,13 +220,13 @@ function Signup() {
           </div>
 
           <div className="text-center flex justify-center gap-1.5 text-blue-600 hover:text-blue-500 text-sm font-medium">
-            <p> Don't have an account? </p>
+            <p> Already have an account? </p>
             <button
               type="button"
               className="cursor-pointer"
               onClick={() => navigate("/signin")}
             >
-              Sign up
+              Sign in
             </button>
           </div>
         </form>

@@ -1,19 +1,31 @@
 import React, { useState } from "react";
 import { Briefcase, Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
 
 function Signin() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  // React Hook Form setup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  // Submit handler
+  const onSubmit = async (data) => {
     setError("");
     setLoading(true);
+    console.log("Form submitted:", data);
+
+    // simulate API call
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/dashboard"); // redirect example
+    }, 1500);
   };
 
   return (
@@ -33,7 +45,8 @@ function Signin() {
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        {/* use handleSubmit from react-hook-form */}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="space-y-4">
             {/* Email */}
             <div>
@@ -49,18 +62,25 @@ function Signin() {
                 </div>
                 <input
                   id="email"
-                  name="email"
                   type="email"
                   autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Enter a valid email",
+                    },
+                  })}
+                  
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
+              {errors.email && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Password */}
@@ -77,18 +97,24 @@ function Signin() {
                 </div>
                 <input
                   id="password"
-                  name="password"
                   type="password"
                   autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
+              {errors.password && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
           </div>
 

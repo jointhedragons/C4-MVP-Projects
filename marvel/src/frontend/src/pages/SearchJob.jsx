@@ -1,6 +1,4 @@
-/* eslint-disable no-constant-condition */
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Search,
   MapPin,
@@ -19,15 +17,6 @@ function SearchJob() {
     experience_level: "",
     min_salary: "",
   });
-
-
-
-
-  
-
-
-
- 
 
   const getMatchScoreColor = (score) => {
     if (score >= 80) return "text-green-600 bg-green-100";
@@ -165,102 +154,112 @@ function SearchJob() {
             </div>
           ) : (
             // jobs.map((jobMatch) => (
-              <div
-                key={"1"} //jobMatch.job.id
-                className="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition-shadow"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                          {/* {jobMatch.job.title} */} 
-                        </h3>
-                        <p className="text-gray-600 mb-2">
-                          {/* {jobMatch.job.company} */}
-                        </p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                          <div className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-1" />
-                            {/* {jobMatch.job.location} */}
-                          </div>
-                          <div className="flex items-center">
-                            <Clock className="h-4 w-4 mr-1" />
-                            {/* {jobMatch.job.type} */}
-                          </div>
-                          <div className="flex items-center">
-                            <DollarSign className="h-4 w-4 mr-1" />
-                            {formatSalary(
-                              1,200
-                            )}
-                          </div>
+            <div
+              key={"1"} //jobMatch.job.id
+              className="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition-shadow"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex-1">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        {/* {jobMatch.job.title} */}
+                      </h3>
+                      <p className="text-gray-600 mb-2">
+                        {/* {jobMatch.job.company} */}
+                      </p>
+                      <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {/* {jobMatch.job.location} */}
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="h-4 w-4 mr-1" />
+                          {/* {jobMatch.job.type} */}
+                        </div>
+                        <div className="flex items-center">
+                          <DollarSign className="h-4 w-4 mr-1" />
+                          {formatSalary(1, 200)}
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <div
-                          className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${getMatchScoreColor(
-                            100
-                          )}`}
-                        >
-                          <Star className="h-4 w-4 mr-1" />
-                          {/*jobMatch.match_score*/}% Match
-                        </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div
+                        className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${getMatchScoreColor(
+                          100
+                        )}`}
+                      >
+                        <Star className="h-4 w-4 mr-1" />
+                        {/*jobMatch.match_score*/}% Match
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <p className="text-gray-700 mb-4 line-clamp-3">
-                  {/* {jobMatch.job.description} */}
-                </p>
+              <p className="text-gray-700 mb-4 line-clamp-3">
+                {/* {jobMatch.job.description} */}
+              </p>
 
-                {/* Skills */}
-                <div className="mb-4">
-                  <div className="flex flex-wrap gap-2">
-                    {["react", "html", "css", "redux", "js"] /*jobMatch.job.skills_required*/
-                      ?.slice(0, 5)
-                      .map((skill, index) => (
-                        <span
-                          key={index}
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            ["react", "html", "css", "redux", "js"].includes(skill)
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {skill}
-                          {["react", "html", "css", "redux", "js"].includes(skill) && " ✓"}
-                        </span>
-                      ))}
-                    {(["react", "html", "css", "redux", "js"].length || 0) > 5 && (
-                      <span className="px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-600">
-                        +{(["react", "html", "css", "redux", "js"].length || 0) - 5} more
+              {/* Skills */}
+              <div className="mb-4">
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "react",
+                    "html",
+                    "css",
+                    "redux",
+                    "js",
+                  ] /*jobMatch.job.skills_required*/
+                    ?.slice(0, 5)
+                    .map((skill, index) => (
+                      <span
+                        key={index}
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          ["react", "html", "css", "redux", "js"].includes(
+                            skill
+                          )
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {skill}
+                        {["react", "html", "css", "redux", "js"].includes(
+                          skill
+                        ) && " ✓"}
                       </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-500">
-                    Posted{" "}
-                    {/* {new Date(jobMatch.job.created_at).toLocaleDateString()} */}
-                  </div>
-                  <button
-                    // onClick={() => handleApply("1")}
-                    className="flex items-center px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
-                  >
-                    Apply Now
-                    <ExternalLink className="h-4 w-4 ml-2" />
-                  </button>
+                    ))}
+                  {(["react", "html", "css", "redux", "js"].length || 0) >
+                    5 && (
+                    <span className="px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-600">
+                      +
+                      {(["react", "html", "css", "redux", "js"].length || 0) -
+                        5}{" "}
+                      more
+                    </span>
+                  )}
                 </div>
               </div>
-            // ))
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-500">
+                  Posted{" "}
+                  {/* {new Date(jobMatch.job.created_at).toLocaleDateString()} */}
+                </div>
+                <button
+                  // onClick={() => handleApply("1")}
+                  className="flex items-center px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                >
+                  Apply Now
+                  <ExternalLink className="h-4 w-4 ml-2" />
+                </button>
+              </div>
+            </div>
           )}
         </div>
       )}
     </div>
   );
-
 }
 
 export default SearchJob;

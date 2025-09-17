@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Briefcase, Mail, Lock, UserCheck, Building } from "lucide-react";
+import { useNavigate } from "react-router";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ function Signup() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -192,13 +193,14 @@ function Signup() {
             </button>
           </div>
 
-          <div className="text-center">
+          <div className="text-center flex justify-center gap-1.5 text-blue-600 hover:text-blue-500 text-sm font-medium">
+            <p> Don't have an account? </p>
             <button
               type="button"
-              // onClick={onSwitchToSignIn}
-              className="text-blue-600 hover:text-blue-500 text-sm font-medium"
+              className="cursor-pointer"
+              onClick={() => navigate("/signin")}
             >
-              Already have an account? Sign in
+              Sign up
             </button>
           </div>
         </form>

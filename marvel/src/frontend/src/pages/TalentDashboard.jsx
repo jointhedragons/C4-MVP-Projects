@@ -1,7 +1,3 @@
-/* eslint-disable no-constant-binary-expression */
-/* eslint-disable no-constant-condition */
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
 import {
   Briefcase,
   Search,
@@ -13,9 +9,7 @@ import {
   DollarSign,
 } from "lucide-react";
 
-export const TalentDashboard = () => {
-  const [loading, setLoading] = useState(true);
-
+const TalentDashboard = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case "pending":
@@ -59,8 +53,6 @@ export const TalentDashboard = () => {
     if (min) return `$${min.toLocaleString()}+`;
     return `Up to $${max?.toLocaleString()}`;
   };
-
-
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -285,3 +277,5 @@ export const TalentDashboard = () => {
     </div>
   );
 };
+
+export default TalentDashboard;

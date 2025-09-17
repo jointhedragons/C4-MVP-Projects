@@ -40,7 +40,7 @@
 - [ ] Prepare presentation
 
 ## Branch Naming Convention
-Use: `Ahmed Khaled Abdel Fattah_AI-Schedule-Planner_4_PROJ-D`
+Use: `AI-Schedule-Planner`
 
 ## Commit Message Format
 `[PROJ-D] Your commit message here`

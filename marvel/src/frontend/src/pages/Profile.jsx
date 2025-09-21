@@ -21,6 +21,7 @@ function Profile() {
   const {
     register,
     handleSubmit,
+    // eslint-disable-next-line no-unused-vars
     formState: { errors },
     getValues,
   } = useForm({

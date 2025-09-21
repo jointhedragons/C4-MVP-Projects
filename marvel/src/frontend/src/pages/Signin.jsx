@@ -1,6 +1,5 @@
 import { Briefcase, Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router";
-<<<<<<< HEAD
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -35,35 +34,6 @@ function Signin() {
       setError(true);
     }
   }
-=======
-import { useForm } from "react-hook-form";
-
-function Signin() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  // React Hook Form setup
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  // Submit handler
-  const onSubmit = async (data) => {
-    setError("");
-    setLoading(true);
-    console.log("Form submitted:", data);
-
-    // simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/dashboard"); // redirect example
-    }, 1500);
-  };
-
->>>>>>> 9b5974ba68351205b1867a5394a542c14c17d193
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -81,12 +51,7 @@ function Signin() {
           </p>
         </div>
 
-<<<<<<< HEAD
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSumbit)}>
-=======
-        {/* use handleSubmit from react-hook-form */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
->>>>>>> 9b5974ba68351205b1867a5394a542c14c17d193
           <div className="space-y-4">
             {/* Email */}
             <div>
@@ -103,35 +68,18 @@ function Signin() {
                 <input
                   id="email"
                   type="email"
-<<<<<<< HEAD
                   {...register("email", {
                     required: true,
                     validate: (value) => {
+                      // eslint-disable-next-line no-useless-escape
                       const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
                       return re.test(value) || "Invalid email address";
                     },
                   })}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-=======
-                  autoComplete="email"
->>>>>>> 9b5974ba68351205b1867a5394a542c14c17d193
                   placeholder="Enter your email"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Enter a valid email",
-                    },
-                  })}
-                  
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              {errors.email && (
-                <p className="text-red-600 text-sm mt-1">
-                  {errors.email.message}
-                </p>
-              )}
             </div>
 
             {/* Password */}
@@ -149,30 +97,14 @@ function Signin() {
                 <input
                   id="password"
                   type="password"
-<<<<<<< HEAD
                   {...register("password", {
                     required: true,
                   })}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-=======
-                  autoComplete="current-password"
->>>>>>> 9b5974ba68351205b1867a5394a542c14c17d193
                   placeholder="Enter your password"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
-                    },
-                  })}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+
                 />
               </div>
-              {errors.password && (
-                <p className="text-red-600 text-sm mt-1">
-                  {errors.password.message}
-                </p>
-              )}
             </div>
           </div>
           {error && (

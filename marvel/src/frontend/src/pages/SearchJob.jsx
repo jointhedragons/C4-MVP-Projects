@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import { useState } from "react";
 import {
   Search,
@@ -9,6 +10,7 @@ import {
 } from "lucide-react";
 
 function SearchJob() {
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({

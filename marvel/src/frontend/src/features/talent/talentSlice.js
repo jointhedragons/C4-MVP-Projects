@@ -8,12 +8,12 @@ const initialState = {
   },
   telentProfile: {
     bio: "Front-end developer skilled in React, JavaScript, and modern UI design, seeking opportunities to build responsive, user-friendly web apps.",
-    experience: "entry",
+    experience: "senior",
     location: "Benha",
     name: "John Doe",
     phone: "123456789012",
     position: "Front-End",
-    salary: 500,
+    salary: "500",
     skills: ["react"],
   },
 };

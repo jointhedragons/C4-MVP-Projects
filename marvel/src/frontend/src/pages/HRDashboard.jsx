@@ -1,8 +1,36 @@
-import { Briefcase, Users, Calendar, MapPin, DollarSign } from "lucide-react";
+import {
+  Briefcase,
+  Users,
+  Calendar,
+  MapPin,
+  DollarSign,
+  Star,
+} from "lucide-react";
 import { useSelector } from "react-redux";
+import AIJobRecommendations from "../services/index";
+import { useState } from "react";
 
 function HRDashboard() {
   const jobPost = useSelector((state) => state.hr.jobPost);
+  const talentProfile = useSelector((state) => state.talent.telentProfile);
+
+  const [jobRecommendations, setJobRecommendations] = useState([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(null);
+
+  const handleJobRecommendations = async () => {
+    if (jobRecommendations.length) return;
+
+    setLoadingRecommendations(true);
+    const response = await AIJobRecommendations(jobPost, talentProfile);
+
+    try {
+      setJobRecommendations(response);
+      setLoadingRecommendations(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
@@ -43,7 +71,10 @@ function HRDashboard() {
                 No jobs posted yet
               </p>
             ) : (
-              <div className="border-1 border-gray-300 rounded-md p-3">
+              <div
+                className="border-1 border-gray-300 rounded-md p-3"
+                onClick={handleJobRecommendations}
+              >
                 <div className="mb-2">
                   <h3 className="text-lg font-semibold">{jobPost.title}</h3>
                   <p className="text-sm text-gray-600">hr</p>
@@ -79,6 +110,106 @@ function HRDashboard() {
                 </div>
               </div>
             )}
+
+            {/* Recommendations */}
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                {/* # of filtered applications */}
+                {!jobRecommendations.length &&
+                !loadingRecommendations &&
+                loadingRecommendations !== null ? (
+                  <p className="text-gray-500 text-center py-8">
+                    No Relevant Candidates!
+                  </p>
+                ) : loadingRecommendations ? (
+                  <p className="text-gray-500 text-center py-8">
+                    Generating Recommendations...
+                  </p>
+                ) : (
+                  jobRecommendations.map((recommendation, i) => (
+                    <div
+                      // application.id
+                      key={i}
+                      className="border border-gray-200 rounded-lg p-4"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h4 className="font-semibold text-gray-900">
+                            {/* talent name */}
+                            {recommendation.name}
+                          </h4>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {/* matching score */}
+                          {recommendation.score && (
+                            <div
+                              className={`flex items-center px-2 py-1 rounded-full text-xs font-medium `}
+                            >
+                              <Star className="h-3 w-3 mr-1" />
+                              {/* application.matchScore */}
+                              {recommendation.score}%
+                            </div>
+                          )}
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium`}
+                          ></span>
+                        </div>
+                      </div>
+
+                      <div className="text-sm text-gray-600 mb-3">
+                        <p>
+                          <strong>Location:</strong> {/* talent location */}
+                          {recommendation.location || "Not specified"}
+                        </p>
+                        <p>
+                          <strong>Experience:</strong> {/* talent exp */}
+                          {recommendation.experience || "Not specified"}
+                        </p>
+                        <p>
+                          <strong>Phone:</strong> {/* talent exp */}
+                          {recommendation.phone || "Not specified"}
+                        </p>
+                        <p>
+                          <strong>Position:</strong> {/* talent exp */}
+                          {recommendation.position || "Not specified"}
+                        </p>
+                        <p>
+                          <strong>Salary:</strong> {/* talent exp */}
+                          {recommendation.salary || "Not specified"}
+                        </p>
+                        <p>
+                          <strong>Reason:</strong> {/* talent exp */}
+                          {recommendation.reason || "Not specified"}
+                        </p>
+                      </div>
+
+                      {/* talent skills */}
+                      {recommendation.skills && (
+                        <div className="mb-3">
+                          <div className="flex flex-wrap gap-1">
+                            {recommendation.skills
+                              .slice(0, 3)
+                              .map((skill, index) => (
+                                <span
+                                  key={index}
+                                  className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                            {recommendation.skills.length > 3 && (
+                              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                                +{["HTML, CSS, React"] - 3} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

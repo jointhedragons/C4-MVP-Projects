@@ -1,21 +1,39 @@
-import React, { useState } from "react";
 import { Briefcase, Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { setRole } from "../features/global/global";
 
 function Signin() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { email, role, password } = useSelector(
+    (state) => state.talent.talentCredintial
+  );
+  const {
+    email: hrEmail,
+    role: hrRole,
+    password: hrPassword,
+  } = useSelector((state) => state.hr.hrCredintial);
+  const dispatch = useDispatch();
+  const [error, setError] = useState(false);
+  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-  };
-
+  function onSumbit(data) {
+    if (email === data.email && password === data.password) {
+      dispatch(setRole(role));
+      navigate("/talent-dashboard");
+      setError(false);
+    } else {
+      setError(true);
+    }
+    if (hrEmail === data.email && hrPassword === data.password) {
+      dispatch(setRole(hrRole));
+      navigate("/hr-dashboard");
+      setError(false);
+    } else {
+      setError(true);
+    }
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -33,7 +51,7 @@ function Signin() {
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSumbit)}>
           <div className="space-y-4">
             {/* Email */}
             <div>
@@ -51,12 +69,13 @@ function Signin() {
                   id="email"
                   name="email"
                   type="email"
-                  autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
+                  {...register("email", {
+                    required: true,
+                    validate: (value) => {
+                      const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+                      return re.test(value) || "Invalid email address";
+                    },
+                  })}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your email"
                 />
@@ -79,32 +98,28 @@ function Signin() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
+                  {...register("password", {
+                    required: true,
+                  })}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your password"
                 />
               </div>
             </div>
           </div>
-
           {error && (
-            <div className="text-red-600 text-sm text-center bg-red-50 py-2 px-4 rounded-lg">
-              {error}
+            <div className="space-y-4 bg-red-300 border-1 border-red-500 rounded-md px-4 py-6">
+              <p className="text-sm text-red-600 text-center">
+                Please check that you entered a correct data
+              </p>
             </div>
           )}
-
           <div>
             <button
               type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
             >
-              {loading ? "Signing in..." : "Sign in"}
+              Sign in
             </button>
           </div>
 

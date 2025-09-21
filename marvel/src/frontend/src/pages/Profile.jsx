@@ -1,7 +1,3 @@
-/* eslint-disable no-constant-condition */
-/* eslint-disable no-constant-binary-expression */
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
 import {
   User,
   MapPin,
@@ -11,54 +7,38 @@ import {
   Plus,
   X,
 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addSkills,
+  createProfile,
+  removeSkills,
+} from "../features/talent/talentSlice";
+import { useForm } from "react-hook-form";
 
 function Profile() {
-  const [profile, setProfile] = useState({
-    full_name: "",
-    phone: "",
-    location: "",
-    bio: "",
-    company: "",
-    position: "",
-    experience_level: "entry",
-    salary_expectation: undefined,
-    skills: [],
+  const { role } = useSelector((state) => state.talent.talentCredintial);
+  const profile = useSelector((state) => state.talent.telentProfile);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm({
+    defaultValues: profile,
   });
-  const [newSkill, setNewSkill] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setMessage("");
-  };
-
-  const addSkill = () => {
-    if (newSkill.trim() && !profile.skills?.includes(newSkill.trim())) {
-      setProfile({
-        ...profile,
-        skills: [...(profile.skills || []), newSkill.trim()],
-      });
-      setNewSkill("");
-    }
-  };
-
-  const removeSkill = (skillToRemove) => {
-    setProfile({
-      ...profile,
-      skills: profile.skills?.filter((skill) => skill !== skillToRemove) || [],
-    });
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addSkill();
-    }
-  };
-
+  const dispatch = useDispatch();
+  function onSubmit(data) {
+    dispatch(
+      createProfile({
+        ...data,
+        location: data.location.trim(),
+        name: data.name.trim(),
+        bio: data.bio.trim(),
+        position: data.position.trim(),
+      })
+    );
+  }
   return (
     <div>
       <div className="max-w-4xl mx-auto">
@@ -72,19 +52,7 @@ function Profile() {
             </p>
           </div>
 
-          {message && (
-            <div
-              className={`mb-6 p-4 rounded-lg ${
-                message.includes("Error")
-                  ? "bg-red-50 text-red-800"
-                  : "bg-green-50 text-green-800"
-              }`}
-            >
-              {message}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Full Name */}
               <div>
@@ -97,13 +65,19 @@ function Profile() {
                   </div>
                   <input
                     type="text"
-                    required
-                    value={profile.full_name || ""}
-                    onChange={(e) =>
-                      setProfile({ ...profile, full_name: e.target.value })
-                    }
                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter your full name"
+                    {...register("name", {
+                      required: "Name is required",
+                      minLength: {
+                        value: 8,
+                        message: "Name must be at least 3 characters long",
+                      },
+                      maxLength: {
+                        value: 50,
+                        message: "Name must be at most 50 characters long",
+                      },
+                    })}
                   />
                 </div>
               </div>
@@ -119,12 +93,15 @@ function Profile() {
                   </div>
                   <input
                     type="tel"
-                    value={profile.phone || ""}
-                    onChange={(e) =>
-                      setProfile({ ...profile, phone: e.target.value })
-                    }
                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter your phone number"
+                    {...register("phone", {
+                      required: "Please Enter Your Phone Number",
+                      pattern: {
+                        value: /^[0-9]{12}$/,
+                        message: "Please Enter Valid Phone Number",
+                      },
+                    })}
                   />
                 </div>
               </div>
@@ -140,12 +117,11 @@ function Profile() {
                   </div>
                   <input
                     type="text"
-                    value={profile.location || ""}
-                    onChange={(e) =>
-                      setProfile({ ...profile, location: e.target.value })
-                    }
                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="City, State or Remote"
+                    {...register("location", {
+                      required: "Please Enter Your Location",
+                    })}
                   />
                 </div>
               </div>
@@ -156,14 +132,10 @@ function Profile() {
                   Experience Level
                 </label>
                 <select
-                  value={profile.experience_level || "entry"}
-                  onChange={(e) =>
-                    setProfile({
-                      ...profile,
-                      experience_level: e.target.value,
-                    })
-                  }
                   className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  {...register("experience", {
+                    required: "Please Select Your Experience Level",
+                  })}
                 >
                   <option value="entry">Entry Level (0-2 years)</option>
                   <option value="mid">Mid Level (3-5 years)</option>
@@ -174,7 +146,7 @@ function Profile() {
 
               {/* Company (for HR) or Current Position (for Talent) */}
               {/* user role */}
-              {"talent" === "hr" ? (
+              {role === "hr" ? (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Company
@@ -185,10 +157,6 @@ function Profile() {
                     </div>
                     <input
                       type="text"
-                      value={profile.company || ""}
-                      onChange={(e) =>
-                        setProfile({ ...profile, company: e.target.value })
-                      }
                       className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Your company name"
                     />
@@ -205,12 +173,11 @@ function Profile() {
                     </div>
                     <input
                       type="text"
-                      value={profile.position || ""}
-                      onChange={(e) =>
-                        setProfile({ ...profile, position: e.target.value })
-                      }
                       className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Your current job title"
+                      {...register("position", {
+                        required: "Please Enter Your Current Position",
+                      })}
                     />
                   </div>
                 </div>
@@ -218,7 +185,7 @@ function Profile() {
 
               {/* Salary Expectation (for Talent only) */}
               {/* user role */}
-              {"talent" === "talent" && (
+              {role === "talent" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Salary Expectation (Annual)
@@ -229,17 +196,15 @@ function Profile() {
                     </div>
                     <input
                       type="number"
-                      value={profile.salary_expectation || ""}
-                      onChange={(e) =>
-                        setProfile({
-                          ...profile,
-                          salary_expectation: e.target.value
-                            ? parseInt(e.target.value)
-                            : undefined,
-                        })
-                      }
                       className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Expected annual salary"
+                      {...register("salary", {
+                        required: "Please Enter Your Salary Expectation",
+                        min: {
+                          value: 0,
+                          message: "Salary must be greater than 0",
+                        },
+                      })}
                     />
                   </div>
                 </div>
@@ -252,13 +217,12 @@ function Profile() {
                 Bio / About Me
               </label>
               <textarea
-                value={profile.bio || ""}
-                onChange={(e) =>
-                  setProfile({ ...profile, bio: e.target.value })
-                }
                 rows={4}
                 className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Tell us about yourself, your experience, and what you're looking for..."
+                {...register("bio", {
+                  required: "Please Enter Your Bio",
+                })}
               />
             </div>
 
@@ -270,16 +234,18 @@ function Profile() {
               <div className="flex items-center space-x-2 mb-4">
                 <input
                   type="text"
-                  value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                  onKeyPress={handleKeyPress}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Add a skill (e.g., JavaScript, Project Management)"
+                  {...register("skills", {
+                    required: "Please Enter Your Skills",
+                  })}
                 />
                 <button
                   type="button"
-                  onClick={addSkill}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  onClick={() =>
+                    dispatch(addSkills(getValues("skills").trim()))
+                  }
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -293,7 +259,7 @@ function Profile() {
                     {skill}
                     <button
                       type="button"
-                      onClick={() => removeSkill(skill)}
+                      onClick={() => dispatch(removeSkills(skill))}
                       className="ml-2 text-blue-600 hover:text-blue-800"
                     >
                       <X className="h-3 w-3" />
@@ -306,10 +272,9 @@ function Profile() {
             <div className="flex justify-end">
               <button
                 type="submit"
-                disabled={saving}
                 className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
-                {saving ? "Saving..." : "Save Profile"}
+                Save Profile
               </button>
             </div>
           </form>

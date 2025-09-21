@@ -1,93 +1,38 @@
-import React, { useState } from "react";
 import { MapPin, DollarSign, Plus, X, Briefcase } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addRequirements,
+  addSkills,
+  createPost,
+  removeRequirements,
+  removeSkills,
+} from "../features/hr/hrSlice";
 
 function PostJob() {
-  const [formData, setFormData] = useState({
-    title: "",
-    company: "",
-    location: "",
-    type: "full-time",
-    experience_level: "mid",
-    salary_min: "",
-    salary_max: "",
-    description: "",
-    requirements: [],
-    skills_required: [],
+  const job_post = useSelector((state) => state.hr.jobPost);
+  const { register, handleSubmit, getValues, reset } = useForm({
+    defaultValues: job_post,
   });
-  const [newRequirement, setNewRequirement] = useState("");
-  const [newSkill, setNewSkill] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const requirments = job_post.requirements;
+  const skills = job_post.skills_required;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
-    setMessage("");
-
-    setFormData({
-      title: "",
-      company: "",
-      location: "",
-      type: "full-time",
-      experience_level: "mid",
-      salary_min: "",
-      salary_max: "",
-      description: "",
-      requirements: [],
-      skills_required: [],
-    });
-
-    setTimeout(() => setMessage(""), 3000);
-  };
-
-  const addRequirement = () => {
-    if (
-      newRequirement.trim() &&
-      !formData.requirements.includes(newRequirement.trim())
-    ) {
-      setFormData({
-        ...formData,
-        requirements: [...formData.requirements, newRequirement.trim()],
-      });
-      setNewRequirement("");
-    }
-  };
-
-  const removeRequirement = (requirement) => {
-    setFormData({
-      ...formData,
-      requirements: formData.requirements.filter((req) => req !== requirement),
-    });
-  };
-
-  const addSkill = () => {
-    if (
-      newSkill.trim() &&
-      !formData.skills_required.includes(newSkill.trim())
-    ) {
-      setFormData({
-        ...formData,
-        skills_required: [...formData.skills_required, newSkill.trim()],
-      });
-      setNewSkill("");
-    }
-  };
-
-  const removeSkill = (skill) => {
-    setFormData({
-      ...formData,
-      skills_required: formData.skills_required.filter((s) => s !== skill),
-    });
-  };
-
-  const handleKeyPress = (e, type) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (type === "requirement") addRequirement();
-      else addSkill();
-    }
-  };
+  const dispatch = useDispatch();
+  function onSubmit(data) {
+    const formatData = {
+      title: data.title.trime(),
+      company: data.company.trim(),
+      location: data.location.trim(),
+      job_type: data.job_type,
+      experience_level: data.experience_level,
+      min_salary: data.min_salary,
+      max_salary: data.max_salary,
+      description: data.description.trim(),
+      requirements: data.requirements,
+      skills_required: data.skills_required,
+    };
+    dispatch(createPost(formatData));
+  }
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -104,19 +49,7 @@ function PostJob() {
           </p>
         </div>
 
-        {message && (
-          <div
-            className={`mb-6 p-4 rounded-lg ${
-              message.includes("Error")
-                ? "bg-red-50 text-red-800"
-                : "bg-green-50 text-green-800"
-            }`}
-          >
-            {message}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Job Title */}
             <div className="md:col-span-2">
@@ -125,13 +58,9 @@ function PostJob() {
               </label>
               <input
                 type="text"
-                required
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
                 className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="e.g., Senior Software Engineer"
+                {...register("title", { required: "Job title is required" })}
               />
             </div>
 
@@ -142,13 +71,11 @@ function PostJob() {
               </label>
               <input
                 type="text"
-                required
-                value={formData.company}
-                onChange={(e) =>
-                  setFormData({ ...formData, company: e.target.value })
-                }
                 className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Company name"
+                {...register("company", {
+                  required: "Company name is required",
+                })}
               />
             </div>
 
@@ -163,13 +90,11 @@ function PostJob() {
                 </div>
                 <input
                   type="text"
-                  required
-                  value={formData.location}
-                  onChange={(e) =>
-                    setFormData({ ...formData, location: e.target.value })
-                  }
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="City, State or Remote"
+                  {...register("location", {
+                    required: "Location is required",
+                  })}
                 />
               </div>
             </div>
@@ -180,11 +105,10 @@ function PostJob() {
                 Job Type
               </label>
               <select
-                value={formData.type}
-                onChange={(e) =>
-                  setFormData({ ...formData, type: e.target.value })
-                }
                 className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                {...register("job_type", {
+                  required: "Job type is required",
+                })}
               >
                 <option value="full-time">Full Time</option>
                 <option value="part-time">Part Time</option>
@@ -199,14 +123,10 @@ function PostJob() {
                 Experience Level
               </label>
               <select
-                value={formData.experience_level}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    experience_level: e.target.value,
-                  })
-                }
                 className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                {...register("experience_level", {
+                  required: "Experience level is required",
+                })}
               >
                 <option value="entry">Entry Level (0-2 years)</option>
                 <option value="mid">Mid Level (3-5 years)</option>
@@ -226,12 +146,15 @@ function PostJob() {
                 </div>
                 <input
                   type="number"
-                  value={formData.salary_min}
-                  onChange={(e) =>
-                    setFormData({ ...formData, salary_min: e.target.value })
-                  }
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="50000"
+                  placeholder="1000"
+                  {...register("min_salary", {
+                    required: "Minimum salary is required",
+                    min: {
+                      value: 1000,
+                      message: "Minimum salary must be at least $1000",
+                    },
+                  })}
                 />
               </div>
             </div>
@@ -246,12 +169,15 @@ function PostJob() {
                 </div>
                 <input
                   type="number"
-                  value={formData.salary_max}
-                  onChange={(e) =>
-                    setFormData({ ...formData, salary_max: e.target.value })
-                  }
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="80000"
+                  placeholder="6000"
+                  {...register("max_salary", {
+                    required: "Maximum salary is required",
+                    min: {
+                      value: 5000,
+                      message: "Maximum salary must be at least $6000",
+                    },
+                  })}
                 />
               </div>
             </div>
@@ -264,13 +190,12 @@ function PostJob() {
             </label>
             <textarea
               required
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
               rows={6}
               className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Describe the role, responsibilities, and what makes this opportunity exciting..."
+              {...register("description", {
+                required: "Job description is required",
+              })}
             />
           </div>
 
@@ -282,22 +207,24 @@ function PostJob() {
             <div className="flex items-center space-x-2 mb-4">
               <input
                 type="text"
-                value={newRequirement}
-                onChange={(e) => setNewRequirement(e.target.value)}
-                onKeyPress={(e) => handleKeyPress(e, "requirement")}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Add a requirement (e.g., Bachelor's degree in Computer Science)"
+                {...register("requirements", {
+                  required: "At least one requirement is required",
+                })}
               />
               <button
                 type="button"
-                onClick={addRequirement}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors cursor-pointer"
+                onClick={() =>
+                  dispatch(addRequirements(getValues("requirements").trim()))
+                }
               >
                 <Plus className="h-4 w-4" />
               </button>
             </div>
             <div className="space-y-2">
-              {formData.requirements.map((requirement, index) => (
+              {requirments.map((requirement, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -305,8 +232,8 @@ function PostJob() {
                   <span className="text-sm text-gray-700">{requirement}</span>
                   <button
                     type="button"
-                    onClick={() => removeRequirement(requirement)}
-                    className="text-red-600 hover:text-red-800"
+                    onClick={() => dispatch(removeRequirements(requirement))}
+                    className="text-red-600 hover:text-red-800 cursor-pointer"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -323,22 +250,24 @@ function PostJob() {
             <div className="flex items-center space-x-2 mb-4">
               <input
                 type="text"
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
-                onKeyPress={(e) => handleKeyPress(e, "skill")}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Add a required skill (e.g., JavaScript, Project Management)"
+                {...register("skills_required", {
+                  required: "At least one skill is required",
+                })}
               />
               <button
                 type="button"
-                onClick={addSkill}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors cursor-pointer"
+                onClick={() =>
+                  dispatch(addSkills(getValues("skills_required").trim()))
+                }
               >
                 <Plus className="h-4 w-4" />
               </button>
             </div>
             <div className="flex flex-wrap gap-2">
-              {formData.skills_required.map((skill, index) => (
+              {skills.map((skill, index) => (
                 <span
                   key={index}
                   className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-100 text-purple-800"
@@ -346,8 +275,8 @@ function PostJob() {
                   {skill}
                   <button
                     type="button"
-                    onClick={() => removeSkill(skill)}
-                    className="ml-2 text-purple-600 hover:text-purple-800"
+                    onClick={() => dispatch(removeSkills(skill))}
+                    className="ml-2 text-purple-600 hover:text-purple-800 cursor-pointer"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -359,30 +288,16 @@ function PostJob() {
           <div className="flex justify-end space-x-4">
             <button
               type="button"
-              onClick={() => {
-                setFormData({
-                  title: "",
-                  company: "",
-                  location: "",
-                  type: "full-time",
-                  experience_level: "mid",
-                  salary_min: "",
-                  salary_max: "",
-                  description: "",
-                  requirements: [],
-                  skills_required: [],
-                });
-              }}
               className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              onClick={() => reset()}
             >
               Clear Form
             </button>
             <button
               type="submit"
-              disabled={loading}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
             >
-              {loading ? "Posting Job..." : "Post Job"}
+              Post Job
             </button>
           </div>
         </form>

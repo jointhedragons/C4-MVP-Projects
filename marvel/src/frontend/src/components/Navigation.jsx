@@ -1,29 +1,44 @@
 import React from "react";
 import { User, Briefcase, LogOut, Home, Search, Plus } from "lucide-react";
+import { useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router";
 
-export const Navigation = ({ currentPage, setCurrentPage }) => {
-  //   const handleSignOut = async () => {
-  //     try {
-  //       await signOut();
-  //     } catch (error) {
-  //       console.error("Error signing out:", error);
-  //     }
-  //   };
+export const Navigation = () => {
+  const role = useSelector((state) => state.global.role);
+  const name = useSelector((state) => {
+    if (role === "talent") {
+      return state.talent.telentProfile.name.split(" ").at(0);
+    } else {
+      return "hr";
+    }
+  });
 
-  const userRole = "hr";    
-
+  const navigate = useNavigate();
   const navItems =
-    userRole === "hr"
+    role === "hr"
       ? [
-          { id: "dashboard", label: "Dashboard", icon: Home },
-          { id: "post-job", label: "Post Job", icon: Plus },
-          { id: "profile", label: "Profile", icon: User },
+          {
+            id: "dashboard",
+            label: "Dashboard",
+            icon: Home,
+            route: "/hr-dashboard",
+          },
+          { id: "post-job", label: "Post Job", icon: Plus, route: "/post-job" },
         ]
       : [
-          { id: "dashboard", label: "Dashboard", icon: Home },
-          { id: "search-jobs", label: "Search Jobs", icon: Search },
-          { id: "applications", label: "My Applications", icon: Briefcase },
-          { id: "profile", label: "Profile", icon: User },
+          {
+            id: "dashboard",
+            label: "Dashboard",
+            icon: Home,
+            route: "/talent-dashboard",
+          },
+          {
+            id: "search-jobs",
+            label: "Search Jobs",
+            icon: Search,
+            route: "/search-jobs",
+          },
+          { id: "profile", label: "Profile", icon: User, route: "/profile" },
         ];
 
   return (
@@ -43,18 +58,20 @@ export const Navigation = ({ currentPage, setCurrentPage }) => {
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
-                <button
+                <NavLink
                   key={item.id}
-                  onClick={() => setCurrentPage(item.id)}
-                  className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    currentPage === item.id
-                      ? "text-blue-600 bg-blue-50"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                  }`}
+                  to={item.route}
+                  className={({ isActive }) =>
+                    `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive
+                        ? "text-blue-600 bg-blue-50"
+                        : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                    }`
+                  }
                 >
                   <Icon className="h-4 w-4 mr-2" />
                   {item.label}
-                </button>
+                </NavLink>
               );
             })}
 
@@ -64,11 +81,11 @@ export const Navigation = ({ currentPage, setCurrentPage }) => {
                   <User className="h-4 w-4 text-white" />
                 </div>
                 <span className="ml-2 text-sm text-gray-700 capitalize">
-                  {userRole}
+                  {name}
                 </span>
               </div>
               <button
-                // onClick={handleSignOut}
+                onClick={() => navigate("/")}
                 className="flex items-center text-gray-700 hover:text-red-600 transition-colors"
               >
                 <LogOut className="h-4 w-4" />

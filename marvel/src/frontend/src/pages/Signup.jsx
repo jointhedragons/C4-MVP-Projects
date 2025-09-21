@@ -1,62 +1,50 @@
-import React, { useState } from "react";
-import { Briefcase, Mail, Lock, UserCheck, Building } from "lucide-react";
+import { Mail, Lock, UserCheck, Building } from "lucide-react";
 import { useNavigate } from "react-router";
+import FormHeader from "../UI/FormHeader";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { createAccount } from "../features/talent/talentSlice";
+import { createHR } from "../features/hr/hrSlice";
 
 function Signup() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  const dispatch = useDispatch();
+  const [userRole, setUserRole] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    getValues,
+  } = useForm();
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
+  function onSubmit(data) {
+    if (!userRole) return;
+    if (userRole === "talent") {
+      dispatch(
+        createAccount({
+          email: data.email.trim(),
+          password: data.password.trim(),
+          role: userRole,
+        })
+      );
+    } else {
+      dispatch(
+        createHR({
+          email: data.email.trim(),
+          password: data.password.trim(),
+          role: userRole,
+        })
+      );
     }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
-    setLoading(true);
-
-    // try {
-    //   await signUp(formData.email, formData.password, formData.role);
-    // } catch (error: any) {
-    //   setError(error.message);
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
-
+    navigate("/");
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <div className="flex justify-center">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl">
-              <Briefcase className="h-8 w-8 text-white" />
-            </div>
-          </div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Join TalentMatch AI and find your perfect match
-          </p>
-        </div>
-
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <FormHeader />
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            {/* Role Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 I am a:
@@ -64,9 +52,9 @@ function Signup() {
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
-                  onClick={() => setFormData({ ...formData, role: "talent" })}
-                  className={`flex items-center justify-center p-4 border-2 rounded-lg transition-all ${
-                    formData.role === "talent"
+                  onClick={() => setUserRole("talent")}
+                  className={`flex items-center justify-center p-4 border-2 cursor-pointer rounded-lg transition-all ${
+                    userRole === "talent"
                       ? "border-blue-500 bg-blue-50 text-blue-700"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
@@ -76,9 +64,9 @@ function Signup() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFormData({ ...formData, role: "hr" })}
-                  className={`flex items-center justify-center p-4 border-2 rounded-lg transition-all ${
-                    formData.role === "hr"
+                  onClick={() => setUserRole("hr")}
+                  className={`flex items-center justify-center p-4 border-2 cursor-pointer rounded-lg transition-all ${
+                    userRole === "hr"
                       ? "border-purple-500 bg-purple-50 text-purple-700"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
@@ -105,13 +93,16 @@ function Signup() {
                   id="email"
                   name="email"
                   type="email"
-                  autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className={`block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    errors?.email && "border-red-500 focus:ring-red-500"
+                  }`}
+                  {...register("email", {
+                    required: "Email is required",
+                    validate: (value) => {
+                      const re = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+                      return re.test(value) || "Invalid email address";
+                    },
+                  })}
                   placeholder="Enter your email"
                 />
               </div>
@@ -133,13 +124,12 @@ function Signup() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="new-password"
-                  required
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
+                  className={`block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    errors?.password && "border-red-500 focus:ring-red-500"
+                  }`}
                   placeholder="Create a password"
                 />
               </div>
@@ -161,35 +151,37 @@ function Signup() {
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
-                  autoComplete="new-password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      confirmPassword: e.target.value,
-                    })
-                  }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  {...register("confirmPassword", {
+                    required: "Confirm password is required",
+                    validate: (value) => {
+                      const password = getValues("password");
+                      return value === password || "Passwords do not match";
+                    },
+                  })}
+                  className={`block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    errors?.confirmPassword &&
+                    "border-red-500 focus:ring-red-500"
+                  }`}
                   placeholder="Confirm your password"
                 />
               </div>
             </div>
           </div>
-
-          {error && (
-            <div className="text-red-600 text-sm text-center bg-red-50 py-2 px-4 rounded-lg">
-              {error}
+          {Object.keys(errors).length > 0 && (
+            <div className="space-y-4 bg-red-300 border-1 border-red-500 rounded-md px-4 py-6">
+              <p className="text-sm text-red-600 text-center">
+                Please check that you entered a correct data
+              </p>
             </div>
           )}
-
           <div>
             <button
               type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="group relative w-full flex justify-center py-3 px-4
+              cursor-pointer 
+              border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
-              {loading ? "Creating Account..." : "Create Account"}
+              {isSubmitting ? "Loading..." : "Sign up"}
             </button>
           </div>
 

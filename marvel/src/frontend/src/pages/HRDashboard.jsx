@@ -7,7 +7,7 @@ import {
   Star,
 } from "lucide-react";
 import { useSelector } from "react-redux";
-import AIJobRecommendations from "../services/index";
+import { recommendTalents } from "../services/index";
 import { useState } from "react";
 
 function HRDashboard() {
@@ -17,11 +17,11 @@ function HRDashboard() {
   const [jobRecommendations, setJobRecommendations] = useState([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(null);
 
-  const handleJobRecommendations = async () => {
+  const handleRecommendations = async () => {
     if (jobRecommendations.length) return;
 
     setLoadingRecommendations(true);
-    const response = await AIJobRecommendations(jobPost, talentProfile);
+    const response = await recommendTalents(jobPost, talentProfile);
 
     try {
       setJobRecommendations(response);
@@ -73,11 +73,10 @@ function HRDashboard() {
             ) : (
               <div
                 className="border-1 border-gray-300 rounded-md p-3"
-                onClick={handleJobRecommendations}
+                onClick={handleRecommendations}
               >
                 <div className="mb-2">
                   <h3 className="text-lg font-semibold">{jobPost.title}</h3>
-                  <p className="text-sm text-gray-600">hr</p>
                 </div>
                 <div className="mb-2 flex items-center space-x-2">
                   <div className="flex items-center space-x-2">

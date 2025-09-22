@@ -9,9 +9,29 @@ import {
   DollarSign,
 } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { recommendJobs } from "../services";
 
 const TalentDashboard = () => {
-  const name = useSelector((state) => state.talent.telentProfile.name);
+  const jobPost = useSelector((state) => state.hr.jobPost);
+  const talentProfile = useSelector((state) => state.talent.telentProfile);
+
+  const [jobRecommendations, setJobRecommendations] = useState([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(null);
+
+  const handleRecommendations = async () => {
+    if (jobRecommendations.length) return;
+
+    setLoadingRecommendations(true);
+    const response = await recommendJobs(jobPost, talentProfile);
+
+    try {
+      setJobRecommendations(response);
+      setLoadingRecommendations(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getMatchScoreColor = (score) => {
     if (score >= 80) return "text-green-600 bg-green-100";
@@ -26,6 +46,11 @@ const TalentDashboard = () => {
     if (min) return `$${min.toLocaleString()}+`;
     return `Up to $${max?.toLocaleString()}`;
   };
+
+  useEffect(() => {
+    handleRecommendations(jobPost, talentProfile);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobPost, talentProfile]);
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -47,56 +72,55 @@ const TalentDashboard = () => {
             Recommended For You
           </h2>
           <div className="space-y-4 max-h-96 overflow-y-auto">
-            {
-              // eslint-disable-next-line no-constant-condition
-              /*recommendedJobs.length*/ 0 === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 mb-2">
-                    No recommendations available
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    Complete your profile to get better job matches
-                  </p>
-                </div>
+            <div className="text-center py-8">
+              {!jobRecommendations.length &&
+              !loadingRecommendations &&
+              loadingRecommendations !== null ? (
+                <p className="text-gray-500 text-center py-8">
+                  Complete your profile to get better job matches
+                </p>
+              ) : loadingRecommendations ? (
+                <p className="text-gray-500 text-center py-8">
+                  Generating Recommendations...
+                </p>
               ) : (
-                <div
-                  key={"1" /*jobMatch.job.id*/}
-                  className="border border-gray-200 rounded-lg p-4"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h4 className="font-semibold text-gray-900">
-                        {/* {jobMatch.job.title} */} frontend
-                      </h4>
-                      <p className="text-sm text-gray-600">
-                        {/* {jobMatch.job.company} */} jaffna
-                      </p>
+                jobRecommendations.map((job, i) => (
+                  <div
+                    key={i}
+                    className="border border-gray-200 rounded-lg p-4"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-semibold text-gray-900">
+                          {job.title}
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Company: {job.company}
+                        </p>
+                      </div>
+                      <div
+                        className={`flex items-center px-2 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(
+                          job.score
+                        )}`}
+                      >
+                        <Star className="h-3 w-3 mr-1" />
+                        {job.score}% Match
+                      </div>
                     </div>
-                    <div
-                      className={`flex items-center px-2 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(
-                        100
-                      )}`}
-                    >
-                      <Star className="h-3 w-3 mr-1" />
-                      {100}% Match
-                    </div>
-                  </div>
 
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                    <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {/* {jobMatch.job.location} */} banha
+                    <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                      <div className="flex items-center">
+                        <MapPin className="h-4 w-4 mr-1" />
+                        {job.location}
+                      </div>
+                      <div className="flex items-center">
+                        <DollarSign className="h-4 w-4 mr-1" />
+                        {formatSalary(job.min_salary, job.max_salary)}
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <DollarSign className="h-4 w-4 mr-1" />
-                      {formatSalary(1, 200)}
-                    </div>
-                  </div>
 
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {["HTML", "CSS", "REACT"]
-                      .slice(0, 3)
-                      .map((skill, index) => (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {job.skills_required.slice(0, 3).map((skill, index) => (
                         <span
                           key={index}
                           className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
@@ -104,9 +128,7 @@ const TalentDashboard = () => {
                           {skill} ✓
                         </span>
                       ))}
-                    {["HTML", "CSS", "REACT"]
-                      .slice(0, 2)
-                      .map((skill, index) => (
+                      {job.skills_required.slice(0, 2).map((skill, index) => (
                         <span
                           key={`missing-${index}`}
                           className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
@@ -114,17 +136,15 @@ const TalentDashboard = () => {
                           {skill}
                         </span>
                       ))}
-                  </div>
+                    </div>
 
-                  <div className="text-sm text-gray-500">
-                    Posted{" "}
-                    {/* {new Date(jobMatch.job.created_at).toLocaleDateString()} */}
-                    10/10/2004
+                    <div className="text-sm text-gray-500">
+                      Posted {job.date}
+                    </div>
                   </div>
-                </div>
-                //   ))
-              )
-            }
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>

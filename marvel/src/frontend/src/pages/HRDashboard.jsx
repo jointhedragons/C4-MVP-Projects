@@ -1,7 +1,5 @@
 import {
   Briefcase,
-  Users,
-  Calendar,
   MapPin,
   DollarSign,
   Star,
@@ -30,6 +28,12 @@ function HRDashboard() {
       setLoadingRecommendations(null);
       console.log(err);
     }
+  };
+
+  const getMatchScoreColor = (score) => {
+    if (score >= 80) return "text-green-600 bg-green-100";
+    if (score >= 60) return "text-yellow-600 bg-yellow-100";
+    return "text-red-600 bg-red-100";
   };
 
   return (
@@ -143,7 +147,9 @@ function HRDashboard() {
                           {/* matching score */}
                           {(recommendation.score || recommendation.Score) && (
                             <div
-                              className={`flex items-center px-2 py-1 rounded-full text-xs font-medium `}
+                              className={`flex items-center px-2 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(
+                                recommendation.score
+                              )}`}
                             >
                               <Star className="h-3 w-3 mr-1" />
                               {/* application.matchScore */}

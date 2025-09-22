@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wealth Managment",
+    "version": "1.0"
+  },
+  "paths": {
+    "/calculate-portfolio": {
+      "post": {
+        "tags": [
+          "Wealth Managment"
+        ],
+        "operationId": "CalculatePortfolio",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvestmentInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InvestmentInput": {
+        "required": [
+          "horizon",
+          "risk"
+        ],
+        "type": "object",
+        "properties": {
+          "capital": {
+            "type": "number",
+            "format": "double"
+          },
+          "horizon": {
+            "type": "string",
+            "nullable": true
+          },
+          "risk": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

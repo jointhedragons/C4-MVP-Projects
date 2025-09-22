@@ -204,7 +204,7 @@ _site/
 *.bak
 *.backup
 *.old
-
+**/.vs/
 # Team-specific ignores (uncomment as needed)
 # Add your team-specific files here that shouldn't be committed
 

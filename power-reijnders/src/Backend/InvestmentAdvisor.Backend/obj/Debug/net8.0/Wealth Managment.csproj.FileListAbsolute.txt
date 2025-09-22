@@ -1,0 +1,73 @@
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.csproj.AssemblyReference.cache
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\rpswa.dswa.cache.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.GeneratedMSBuildEditorConfig.editorconfig
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.AssemblyInfoInputs.cache
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.AssemblyInfo.cs
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.csproj.CoreCompileInputs.cache
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.MvcApplicationPartsAssemblyInfo.cs
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.MvcApplicationPartsAssemblyInfo.cache
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\appsettings.Development.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\appsettings.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Wealth Managment.staticwebassets.endpoints.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Wealth Managment.exe
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Wealth Managment.deps.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Wealth Managment.runtimeconfig.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Wealth Managment.dll
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Wealth Managment.pdb
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Microsoft.OpenApi.dll
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\rjimswa.dswa.cache.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\scopedcss\bundle\Wealth Managment.styles.css
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\staticwebassets.build.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\staticwebassets.build.json.cache
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\staticwebassets.development.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth M.26ED93E2.Up2Date
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.dll
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\refint\Wealth Managment.dll
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.pdb
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\Wealth Managment.genruntimeconfig.cache
+E:\MY Projects\Visual_Studio\Wealth Managment\Wealth Managment\Wealth Managment\obj\Debug\net8.0\ref\Wealth Managment.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\appsettings.Development.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\appsettings.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Wealth Managment.staticwebassets.endpoints.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Wealth Managment.exe
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Wealth Managment.deps.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Wealth Managment.runtimeconfig.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Wealth Managment.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Wealth Managment.pdb
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Microsoft.OpenApi.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.csproj.AssemblyReference.cache
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\rpswa.dswa.cache.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.GeneratedMSBuildEditorConfig.editorconfig
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.AssemblyInfoInputs.cache
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.AssemblyInfo.cs
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.csproj.CoreCompileInputs.cache
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.MvcApplicationPartsAssemblyInfo.cs
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.MvcApplicationPartsAssemblyInfo.cache
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.sourcelink.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\rjimswa.dswa.cache.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\scopedcss\bundle\Wealth Managment.styles.css
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\staticwebassets.build.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\staticwebassets.build.json.cache
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\staticwebassets.development.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth M.26ED93E2.Up2Date
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\refint\Wealth Managment.dll
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.pdb
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\Wealth Managment.genruntimeconfig.cache
+G:\Projects\Ai Wealth Managment\C4-MVP-Projects\power-reijnders\src\Backend\InvestmentAdvisor.Backend\obj\Debug\net8.0\ref\Wealth Managment.dll

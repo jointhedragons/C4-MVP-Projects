@@ -93,25 +93,29 @@ AI-Travel-Guide is a lightweight web-based travel planner that helps users gener
 ## AI/ML Integration (if applicable)
 
 ### AI Component Description
-- **Type of AI:** [Machine Learning, NLP, Computer Vision, etc.]
-- **Purpose:** [What the AI accomplishes]
-- **Model Source:** [Pre-trained, custom, API service]
+- **Type of AI:** [Recommendation System + NLP]
+- **Purpose:** [Suggest hotels and activities for a given destination, 
+               Generate a simplified travel timeline based on the selected period]
+- **Model Source:** [TripAdvisor API , Google Places API]
 
 ### Data Requirements
-- **Training Data:** [What data is needed for training]
-- **Input Data:** [What data the AI processes]
-- **Data Quality:** [Requirements for data quality]
-- **Data Privacy:** [How user data is handled]
+- **Training Data:** [MVP may not require custom training → use open datasets on tourism/activities,
+                      Optionally use pre-trained models without additional training]
+- **Input Data:** [Destination , Number of days / travel period, User interests (history, nature,
+                  shopping, food)]
+- **Data Quality:** [Clean datasets of hotels/activities (name, location, description, rating),
+                    Avoid missing values to ensure complete recommendations]
+- **Data Privacy:** [Minimal user data storage, No collection of sensitive personal information]
 
 ### Performance Expectations
-- **Accuracy:** [Expected accuracy percentage]
-- **Speed:** [Response time requirements]
-- **Reliability:** [Fallback strategies]
+- **Accuracy:** [For MVP: 60–70% relevance in recommendations is acceptable]
+- **Speed:** [Response time under 2 seconds per request]
+- **Reliability:** [If AI cannot generate results, fall back to default “Top rated” options from APIs]
 
 ### Fallback Strategy
-- **When AI Fails:** [What happens if AI is unavailable]
-- **Manual Override:** [Can users override AI decisions]
-- **Error Handling:** [How AI errors are managed]
+- **When AI Fails:** [Display a default list]
+- **Manual Override:** [Allow the user to edit the generated plan (add/remove activities)]
+- **Error Handling:** [Show clear error messages: “Recommendation service unavailable, showing default options.” , Log errors for debugging later.]
 
 ## Project Constraints
 

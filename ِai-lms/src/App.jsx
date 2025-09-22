@@ -1,13 +1,27 @@
-import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import AppLayout from "./AppLayout";
+import HomePage from "./pages/HomePage";
+import LoginSlice from "./features/auth/LoginSlice";
+
+const router = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "loginSlice",
+        element: <LoginSlice />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  const x = 5;
-
-  return (
-    <div className="bg-slate-400 p-4 rounded-md">
-      <h1>Hello World 👋</h1>
-    </div>
-  );
+  return <RouterProvider router={router}></RouterProvider>;
 }
 
 export default App;

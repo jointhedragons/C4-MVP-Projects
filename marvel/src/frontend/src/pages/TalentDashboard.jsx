@@ -28,7 +28,7 @@ const TalentDashboard = () => {
       const response = await recommendJobs(jobPost, talentProfile);
 
       setJobRecommendations(response);
-
+      localStorage.setItem("jobs", JSON.stringify(response));
       setLoadingRecommendations(false);
     } catch (err) {
       console.log(err);
@@ -50,7 +50,15 @@ const TalentDashboard = () => {
   };
 
   useEffect(() => {
-    handleRecommendations(jobPost, talentProfile);
+    if (!localStorage.getItem("recommendedJobs")) {
+      handleRecommendations(jobPost, talentProfile);
+      if (!loadingRecommendations)
+        localStorage.setItem("recommendedJobs", true);
+    } else {
+      const jobs = JSON.parse(localStorage.getItem("jobs"));
+      console.log(jobs);
+      setJobRecommendations(jobs);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobPost, talentProfile]);
@@ -77,7 +85,7 @@ const TalentDashboard = () => {
           </h2>
           <div className="space-y-4 max-h-96 overflow-y-auto">
             <div className="text-center py-8">
-              {!jobRecommendations.length &&
+              {!localStorage.getItem("recommendedJobs") &&
               !loadingRecommendations &&
               loadingRecommendations !== null ? (
                 <p className="text-gray-500 text-center py-8">

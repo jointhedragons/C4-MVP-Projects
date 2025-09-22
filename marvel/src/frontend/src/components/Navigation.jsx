@@ -41,6 +41,11 @@ export const Navigation = () => {
           { id: "profile", label: "Profile", icon: User, route: "/profile" },
         ];
 
+  const handleLogOut = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
     <nav className="bg-white shadow-lg border-b mb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,7 +90,7 @@ export const Navigation = () => {
                 </span>
               </div>
               <button
-                onClick={() => navigate("/")}
+                onClick={() => handleLogOut()}
                 className="flex items-center text-gray-700 hover:text-red-600 transition-colors"
               >
                 <LogOut className="h-4 w-4" />

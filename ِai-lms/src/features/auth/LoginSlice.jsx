@@ -58,7 +58,7 @@ function LoginSlice() {
             id="email"
             {...register("email", { required: "This field is required !" })}
             className={`bg-[#F3F9F7] rounded-md px-4 py-2 outline-none focus:ring-2 ${
-              errors.email ? "focus:ring-red-600" : "focus:ring-[#35AFA0]"
+              errors.email ? "focus:ring-red-600" : "focus:ring-[#155DFC]"
             } transition-all duration-300 shadow-sm`}
             placeholder="Enter your email"
           />
@@ -83,7 +83,7 @@ function LoginSlice() {
             id="password"
             {...register("password", { required: "This field is required !" })}
             className={`bg-[#F3F9F7] rounded-md px-4 py-2 outline-none focus:ring-2 ${
-              errors.password ? "focus:ring-red-600" : "focus:ring-[#35AFA0]"
+              errors.password ? "focus:ring-red-600" : "focus:ring-[#155DFC]"
             } transition-all duration-300 shadow-sm`}
             placeholder="••••••••"
           />

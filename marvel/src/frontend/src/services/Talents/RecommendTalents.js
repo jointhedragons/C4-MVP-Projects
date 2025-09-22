@@ -35,7 +35,7 @@ The JSON must strictly follow this format:
 [
   {
     "name": "string",
-    "skills": ["skill1", "skill2"],
+    "skills": ["string"],
     "experience": "string",
     "location": "string",
     "phone": "string",

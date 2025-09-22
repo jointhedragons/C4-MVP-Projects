@@ -20,13 +20,15 @@ const TalentDashboard = () => {
   const [loadingRecommendations, setLoadingRecommendations] = useState(null);
 
   const handleRecommendations = async () => {
-    if (jobRecommendations.length) return;
+    if (jobRecommendations.length || loadingRecommendations) return;
 
     setLoadingRecommendations(true);
-    const response = await recommendJobs(jobPost, talentProfile);
 
     try {
+      const response = await recommendJobs(jobPost, talentProfile);
+
       setJobRecommendations(response);
+
       setLoadingRecommendations(false);
     } catch (err) {
       console.log(err);
@@ -49,6 +51,7 @@ const TalentDashboard = () => {
 
   useEffect(() => {
     handleRecommendations(jobPost, talentProfile);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobPost, talentProfile]);
 
@@ -58,7 +61,8 @@ const TalentDashboard = () => {
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white h-40">
         <h1 className="text-3xl font-bold mb-2">
           {/* profile name */}
-          Welcome back <span className="text-blue-300">{name}</span>
+          Welcome back{" "}
+          <span className="text-blue-300">{talentProfile.name}</span>
         </h1>
         <p className="text-blue-100">
           Track your applications and discover new opportunities

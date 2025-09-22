@@ -18,7 +18,7 @@ function HRDashboard() {
   const [loadingRecommendations, setLoadingRecommendations] = useState(null);
 
   const handleRecommendations = async () => {
-    if (jobRecommendations.length) return;
+    if (jobRecommendations.length || loadingRecommendations) return;
 
     setLoadingRecommendations(true);
 
@@ -196,7 +196,7 @@ function HRDashboard() {
                       </div>
 
                       {/* talent skills */}
-                      {(recommendation.skills || recommendation.Skills) && (
+                      {Array.isArray(recommendation.skills) && (
                         <div className="mb-3">
                           <div className="flex flex-wrap gap-1">
                             {recommendation.skills

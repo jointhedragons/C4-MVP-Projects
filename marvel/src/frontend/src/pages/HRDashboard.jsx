@@ -21,12 +21,13 @@ function HRDashboard() {
     if (jobRecommendations.length) return;
 
     setLoadingRecommendations(true);
-    const response = await recommendTalents(jobPost, talentProfile);
 
     try {
+      const response = await recommendTalents(jobPost, talentProfile);
       setJobRecommendations(response);
       setLoadingRecommendations(false);
     } catch (err) {
+      setLoadingRecommendations(null);
       console.log(err);
     }
   };
@@ -135,18 +136,18 @@ function HRDashboard() {
                         <div>
                           <h4 className="font-semibold text-gray-900">
                             {/* talent name */}
-                            {recommendation.name}
+                            {recommendation.name || recommendation.Name}
                           </h4>
                         </div>
                         <div className="flex items-center space-x-2">
                           {/* matching score */}
-                          {recommendation.score && (
+                          {(recommendation.score || recommendation.Score) && (
                             <div
                               className={`flex items-center px-2 py-1 rounded-full text-xs font-medium `}
                             >
                               <Star className="h-3 w-3 mr-1" />
                               {/* application.matchScore */}
-                              {recommendation.score}%
+                              {recommendation.score || recommendation.Score}%
                             </div>
                           )}
                           <span
@@ -158,32 +159,44 @@ function HRDashboard() {
                       <div className="text-sm text-gray-600 mb-3">
                         <p>
                           <strong>Location:</strong> {/* talent location */}
-                          {recommendation.location || "Not specified"}
+                          {recommendation.location ||
+                            recommendation.Location ||
+                            "Not specified"}
                         </p>
                         <p>
                           <strong>Experience:</strong> {/* talent exp */}
-                          {recommendation.experience || "Not specified"}
+                          {recommendation.experience ||
+                            recommendation.Experience ||
+                            "Not specified"}
                         </p>
                         <p>
                           <strong>Phone:</strong> {/* talent exp */}
-                          {recommendation.phone || "Not specified"}
+                          {recommendation.phone ||
+                            recommendation.Phone ||
+                            "Not specified"}
                         </p>
                         <p>
                           <strong>Position:</strong> {/* talent exp */}
-                          {recommendation.position || "Not specified"}
+                          {recommendation.position ||
+                            recommendation.Position ||
+                            "Not specified"}
                         </p>
                         <p>
                           <strong>Salary:</strong> {/* talent exp */}
-                          {recommendation.salary || "Not specified"}
+                          {recommendation.salary ||
+                            recommendation.Salary ||
+                            "Not specified"}
                         </p>
                         <p>
                           <strong>Reason:</strong> {/* talent exp */}
-                          {recommendation.reason || "Not specified"}
+                          {recommendation.reason ||
+                            recommendation.Reason ||
+                            "Not specified"}
                         </p>
                       </div>
 
                       {/* talent skills */}
-                      {recommendation.skills && (
+                      {(recommendation.skills || recommendation.Skills) && (
                         <div className="mb-3">
                           <div className="flex flex-wrap gap-1">
                             {recommendation.skills

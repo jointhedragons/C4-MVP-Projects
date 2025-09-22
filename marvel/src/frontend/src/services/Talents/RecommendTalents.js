@@ -6,7 +6,7 @@ const ai = new GoogleGenAI({
 
 export default async function main(jobPosting, talentProfile) {
   // 1. Build the query string
-let query = `I have a job posting and a list of talent profiles. 
+  let query = `I have a job posting and a list of talent profiles. 
 My goal is to recommend the best talent for the job based on their skills and experience.
 
 Job Posting:
@@ -87,7 +87,10 @@ The JSON must strictly follow this format:
     });
 
     let text = response.candidates[0].content.parts[0].text;
-    text = text.replace(/```json\n?/, "").replace(/```$/, "").trim();
+    text = text
+      .replace(/```json\n?/, "")
+      .replace(/```$/, "")
+      .trim();
     const talents = JSON.parse(text);
 
     console.log(talents);

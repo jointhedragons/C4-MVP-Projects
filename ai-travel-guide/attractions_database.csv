@@ -1,0 +1,11 @@
+name,city,type,category,price_range,duration_hours,best_time
+Railay Beach,Ao Nang,Beach,"nature,beach,swimming",Free,4,Morning
+Phi Phi Islands,Ao Nang,Island,"nature,island,boat",Paid,8,Full Day
+Emerald Pool,Ao Nang,Nature,"nature,pool,forest",Paid,3,Afternoon
+Tiger Cave Temple,Ao Nang,Temple,"cultural,temple,view",Free,2,Morning
+Ao Nang Beach,Ao Nang,Beach,"nature,beach,relax",Free,2,Evening
+Hong Islands,Ao Nang,Island,"nature,island,snorkeling",Paid,6,Full Day
+Than Bok Khorani National Park,Ao Nang,National Park,"nature,park,walking",Paid,4,Morning
+Krabi Town Night Market,Ao Nang,Market,"shopping,food,cultural",Free,3,Evening
+Wat Kaew Korawaram,Ao Nang,Temple,"cultural,temple,historical",Free,1,Morning
+Shell Cemetery,Ao Nang,Natural Wonder,"nature,unique,geological",Paid,2,Afternoon

@@ -6,7 +6,6 @@ import Signup from "./pages/Signup";
 import HRDashboard from "./pages/HRDashboard";
 import TalentDashboard from "./pages/TalentDashboard";
 import Profile from "./pages/Profile";
-import SearchJob from "./pages/SearchJob";
 
 import PostJob from "./pages/PostJob";
 import NotFound from "./pages/NotFound";
@@ -27,7 +26,6 @@ function App() {
               <Route path="hr-dashboard" element={<HRDashboard />} />
               <Route path="talent-dashboard" element={<TalentDashboard />} />
               <Route path="profile" element={<Profile />} />
-              <Route path="search-jobs" element={<SearchJob />} />
               <Route path="post-job" element={<PostJob />} />
               <Route path="post-job/:id" element={<PostJob />} />
             </Route>

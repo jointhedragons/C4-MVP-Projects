@@ -1,5 +1,4 @@
-import React from "react";
-import { User, Briefcase, LogOut, Home, Search, Plus } from "lucide-react";
+import { User, Briefcase, LogOut, Home, Plus } from "lucide-react";
 import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router";
 
@@ -32,17 +31,10 @@ export const Navigation = () => {
             icon: Home,
             route: "/talent-dashboard",
           },
-          {
-            id: "search-jobs",
-            label: "Search Jobs",
-            icon: Search,
-            route: "/search-jobs",
-          },
           { id: "profile", label: "Profile", icon: User, route: "/profile" },
         ];
 
   const handleLogOut = () => {
-    // localStorage.clear();
     navigate("/");
   };
 

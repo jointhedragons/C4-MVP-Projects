@@ -1,35 +1,41 @@
 const router = require("express").Router();
-const auth = require("../middleware/auth");
+const { auth, authorizeRoles } = require("../middleware/auth");
 const TripRequest = require("../models/TripRequest");
 const Hotel = require("../models/Hotel");
 const Activity = require("../models/Activity");
 const escReg = require("../utils/escapeRegex");
 
+// ==============================
 // Create trip — generate plan + save
+// ==============================
 router.post("/", auth, async (req, res, next) => {
   try {
     const { destination, start_date, end_date, budget, interests } = req.body;
-    if (!destination || !start_date || !end_date)
+    if (!destination || !start_date || !end_date) {
       return res.status(400).json({ message: "Missing fields" });
+    }
 
-    // TODO: call AI service to generate plan based on destination, dates, budget, interests
+    // 🔹 TODO: replace naive planner with AI service call later
 
-    // Basic naive planner: pick top 2 hotels and 2-3 activities per day
     const hotels = await Hotel.find({
       destination: new RegExp(escReg(destination), "i"),
     }).limit(3);
+
     const activities = await Activity.find({
       destination: new RegExp(escReg(destination), "i"),
     }).limit(20);
 
-    // Create itinerary: split days
+    // build itinerary by splitting days
     const sd = new Date(start_date);
     const ed = new Date(end_date);
-    const days = Math.max(1, Math.ceil((ed - sd) / (1000 * 60 * 60 * 24)) + 1);
+    const days = Math.max(
+      1,
+      Math.ceil((ed - sd) / (1000 * 60 * 60 * 24)) + 1
+    );
+
     const itinerary = [];
     for (let d = 0; d < days; d++) {
       const dayActivities = [];
-      // simple choose 2 or 3 activities
       for (let i = 0; i < Math.min(3, activities.length); i++) {
         const idx = (d * 3 + i) % activities.length;
         const a = activities[idx];
@@ -48,6 +54,7 @@ router.post("/", auth, async (req, res, next) => {
       start_date: sd,
       end_date: ed,
       budget,
+      interests,
       hotels: hotels.map((h) => h._id),
       itinerary,
     });
@@ -59,7 +66,9 @@ router.post("/", auth, async (req, res, next) => {
   }
 });
 
-// List trips for user
+// ==============================
+// List trips for current user
+// ==============================
 router.get("/", auth, async (req, res, next) => {
   try {
     const { page = 1, limit = 20 } = req.query;
@@ -74,29 +83,65 @@ router.get("/", auth, async (req, res, next) => {
   }
 });
 
-// Get single trip
+// ==============================
+// Get single trip (owner only, or admin/ai roles)
+// ==============================
 router.get("/:id", auth, async (req, res, next) => {
   try {
     const trip = await TripRequest.findById(req.params.id).populate("hotels");
     if (!trip) return res.status(404).json({ message: "Not found" });
-    if (!trip.user.equals(req.user._id))
+
+    // Allow owner, admin, or AI role
+    if (
+      !trip.user.equals(req.user._id) &&
+      !["admin", "ai"].includes(req.user.role)
+    ) {
       return res.status(403).json({ message: "Forbidden" });
+    }
+
     res.json(trip);
   } catch (err) {
     next(err);
   }
 });
 
-// update trip minimal
+// ==============================
+// Update trip (owner, admin, or AI)
+// ==============================
 router.put("/:id", auth, async (req, res, next) => {
   try {
     const trip = await TripRequest.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Not found" });
-    if (!trip.user.equals(req.user._id))
+
+    if (
+      !trip.user.equals(req.user._id) &&
+      !["admin", "ai"].includes(req.user.role)
+    ) {
       return res.status(403).json({ message: "Forbidden" });
+    }
+
     Object.assign(trip, req.body);
     await trip.save();
     res.json(trip);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ==============================
+// Delete trip (owner or admin)
+// ==============================
+router.delete("/:id", auth, async (req, res, next) => {
+  try {
+    const trip = await TripRequest.findById(req.params.id);
+    if (!trip) return res.status(404).json({ message: "Not found" });
+
+    if (!trip.user.equals(req.user._id) && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    await trip.deleteOne();
+    res.json({ message: "Trip deleted successfully" });
   } catch (err) {
     next(err);
   }

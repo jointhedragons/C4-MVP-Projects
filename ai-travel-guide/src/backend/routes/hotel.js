@@ -1,9 +1,12 @@
 const router = require("express").Router();
 const Hotel = require("../models/Hotel");
 const escReg = require("../utils/escapeRegex");
+const { auth, authorizeRoles } = require("../middleware/auth");
 
-// GET hotels
-router.get("/", async (req, res, next) => {
+// ==============================
+// GET hotels (all authenticated users)
+// ==============================
+router.get("/", auth, async (req, res, next) => {
   try {
     const { 
       page = 1, 
@@ -47,8 +50,10 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// Get By ID
-router.get("/:id", async (req, res, next) => {
+// ==============================
+// GET By ID (all authenticated users)
+// ==============================
+router.get("/:id", auth, async (req, res, next) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
     if (!hotel) return res.status(404).json({ message: "Hotel not found" });
@@ -58,8 +63,10 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// Create hotel
-router.post("/", async (req, res, next) => {
+// ==============================
+// CREATE hotel (admin + ai roles)
+// ==============================
+router.post("/", auth, authorizeRoles("admin", "ai"), async (req, res, next) => {
   try {
     const newHotel = new Hotel(req.body);
     await newHotel.save();
@@ -69,10 +76,16 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// Update hotel
-router.put("/:id", async (req, res, next) => {
+// ==============================
+// UPDATE hotel (admin + ai roles)
+// ==============================
+router.put("/:id", auth, authorizeRoles("admin", "ai"), async (req, res, next) => {
   try {
-    const updatedHotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedHotel = await Hotel.findByIdAndUpdate(
+      req.params.id, 
+      req.body, 
+      { new: true }
+    );
     if (!updatedHotel) return res.status(404).json({ message: "Hotel not found" });
     res.json(updatedHotel);
   } catch (err) {
@@ -80,9 +93,10 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-
-// Delete hotel
-router.delete("/:id", async (req, res, next) => {
+// ==============================
+// DELETE hotel (only admin)
+// ==============================
+router.delete("/:id", auth, authorizeRoles("admin"), async (req, res, next) => {
   try {
     const deletedHotel = await Hotel.findByIdAndDelete(req.params.id);
     if (!deletedHotel) return res.status(404).json({ message: "Hotel not found" });

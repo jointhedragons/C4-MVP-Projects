@@ -75,4 +75,3 @@
 /Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/obj/Debug/net9.0/AI-Wealth-Management.pdb
 /Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/obj/Debug/net9.0/AI-Wealth-Management.genruntimeconfig.cache
 /Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/obj/Debug/net9.0/ref/AI-Wealth-Management.dll
-/Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/bin/Debug/net9.0/appsettings.docker.json

@@ -11,6 +11,15 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton<RecommendationService>();
 builder.Services.AddSingleton<IInvestmentAdviceService, InvestmentAdviceService>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowNext", policy =>
+        policy
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+    );
+});
 
 var app = builder.Build();
 
@@ -28,6 +37,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowNext");
 
 app.UseHttpsRedirection();
 

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import objBall from "../public/3dObj.svg";
 import { easeOut, motion } from "framer-motion";
 
@@ -9,29 +10,33 @@ export default function FormWithObjects() {
   const [strategy1, setStrategy1] = useState("");
   const [strategy2, setStrategy2] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     setLoading(true);
 
-    const payload = {
-      amount: Number(amount),
-      strategy: {
-        term: strategy1,
-        Risk: strategy2,
-      },
-    };
+    const params = new URLSearchParams({
+      capital: Number(amount),
+      horizon: strategy1,
+      risk: strategy2,
+    });
 
     try {
-      const res = await fetch("http://localhost:5000/api/wealth", {
-        method: "POST",
+      const res = await fetch(`https://localhost:7237/api/Chat/ask?${params}`, {
+        method: "GET",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
       console.log("Response:", data);
-      alert("Data submitted successfully!");
+
+      sessionStorage.setItem('investmentResult', JSON.stringify({
+        ...data,
+        formData: { amount, strategy1, strategy2 }
+      }));
+
+      router.push('/results');
     } catch (err) {
       console.error(err);
       alert("Something went wrong!");
@@ -57,7 +62,6 @@ export default function FormWithObjects() {
       `,
       }}
     >
-      {/* Background Objects */}
       <motion.div
         className="absolute md:-right-48 md:block hidden md:-bottom-40 transform z-5"
         initial={{ opacity: 0, right: -200 }}
@@ -84,9 +88,7 @@ export default function FormWithObjects() {
         />
       </motion.div>
 
-      {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-16">
-        {/* Header */}
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 50 }}
@@ -99,7 +101,6 @@ export default function FormWithObjects() {
           <div className="2xl:w-4/12 lg:w-3/12 md:w-4/12 w-6/12 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto 2xl:mb-4"></div>
         </motion.div>
 
-        {/* Main Form */}
         <motion.div
           className="2xl:max-w-3xl xl:max-w-2xl max-w-lg mx-auto"
           initial={{ opacity: 0, scale: 0.8 }}
@@ -117,7 +118,6 @@ export default function FormWithObjects() {
                 visible: { transition: { staggerChildren: 0.15 } },
               }}
             >
-              {/* Amount Input */}
               <motion.div
                 className="space-y-2 flex-1 w-full border-1 border-white/20 border-dotted shadow-2xl md:p-5 p-3 rounded-2xl"
                 whileHover={{ scale: 1.02 }}
@@ -140,7 +140,6 @@ export default function FormWithObjects() {
                 </div>
               </motion.div>
 
-              {/* Strategy Selection */}
               <motion.div
                 className="flex-1 w-full space-y-2 border-1 border-white/20 border-dotted shadow-2xl p-5 rounded-2xl"
                 whileHover={{ scale: 1.01 }}
@@ -149,16 +148,14 @@ export default function FormWithObjects() {
                   Investment Strategy
                 </label>
 
-                {/* Term Strategy */}
                 <div className="grid md:grid-cols-2 grid-cols-1 gap-3 md:mt-4">
                   {["Long Term", "Short Term"].map((opt) => (
                     <motion.label
                       key={opt}
-                      className={`relative cursor-pointer transition-all duration-300 ${
-                        strategy1 === opt
-                          ? "bg-gradient-to-r from-blue-500/30 to-purple-500/30 border-blue-400/50 shadow-lg shadow-blue-500/20"
-                          : "bg-white/1 border-white/20 hover:bg-white/10"
-                      } border rounded-2xl p-4 backdrop-blur-sm`}
+                      className={`relative cursor-pointer transition-all duration-300 ${strategy1 === opt
+                        ? "bg-gradient-to-r from-blue-500/30 to-purple-500/30 border-blue-400/50 shadow-lg shadow-blue-500/20"
+                        : "bg-white/1 border-white/20 hover:bg-white/10"
+                        } border rounded-2xl p-4 backdrop-blur-sm`}
                       whileHover={{ scale: 1.05 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
@@ -172,11 +169,10 @@ export default function FormWithObjects() {
                       />
                       <div className="text-center">
                         <div
-                          className={`flex items-center justify-center w-10 h-10 rounded-full mx-auto mb-2 transition-all duration-200 ${
-                            strategy1 === opt
-                              ? "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg"
-                              : "bg-white/10"
-                          }`}
+                          className={`flex items-center justify-center w-10 h-10 rounded-full mx-auto mb-2 transition-all duration-200 ${strategy1 === opt
+                            ? "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg"
+                            : "bg-white/10"
+                            }`}
                         >
                           <span className="text-xl">{strategyIcons[opt]}</span>
                         </div>
@@ -188,16 +184,14 @@ export default function FormWithObjects() {
                   ))}
                 </div>
 
-                {/* Risk Strategy */}
                 <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mt-3">
                   {["High Risk", "Low Risk"].map((opt) => (
                     <motion.label
                       key={opt}
-                      className={`relative cursor-pointer transition-all duration-300 ${
-                        strategy2 === opt
-                          ? "bg-gradient-to-r from-blue-500/30 to-purple-500/30 border-blue-400/50 shadow-lg shadow-blue-500/20"
-                          : "bg-white/1 border-white/20 hover:bg-white/10"
-                      } border rounded-2xl p-4 backdrop-blur-sm`}
+                      className={`relative cursor-pointer transition-all duration-300 ${strategy2 === opt
+                        ? "bg-gradient-to-r from-blue-500/30 to-purple-500/30 border-blue-400/50 shadow-lg shadow-blue-500/20"
+                        : "bg-white/1 border-white/20 hover:bg-white/10"
+                        } border rounded-2xl p-4 backdrop-blur-sm`}
                       whileHover={{ scale: 1.05 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
@@ -211,11 +205,10 @@ export default function FormWithObjects() {
                       />
                       <div className="text-center">
                         <div
-                          className={`flex items-center justify-center w-10 h-10 rounded-full mx-auto mb-2 transition-all duration-200 ${
-                            strategy2 === opt
-                              ? "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg"
-                              : "bg-white/10"
-                          }`}
+                          className={`flex items-center justify-center w-10 h-10 rounded-full mx-auto mb-2 transition-all duration-200 ${strategy2 === opt
+                            ? "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg"
+                            : "bg-white/10"
+                            }`}
                         >
                           <span className="text-xl">{strategyIcons[opt]}</span>
                         </div>
@@ -228,7 +221,6 @@ export default function FormWithObjects() {
                 </div>
               </motion.div>
 
-              {/* Submit Button */}
               <motion.div
                 className="flex items-center flex-col w-full md:w-auto"
                 whileHover={{ scale: 1.05 }}

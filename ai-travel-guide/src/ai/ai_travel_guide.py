@@ -1,31 +1,78 @@
-# ai_travel_guide.py
 import pandas as pd
+import requests
 import re
 import random
 from typing import Dict, List, Any
 from datetime import datetime, timedelta
 
 class AITravelGuide:
-    def __init__(self):
-        self.hotels_df = self.load_data('hotels_database.csv')
-        self.attractions_df = self.load_data('attractions_database.csv')
-        print(f"Hotels data: {len(self.hotels_df)} rows")
-        print(f"Attractions data: {len(self.attractions_df)} rows")
-        
-    def load_data(self, filename: str) -> pd.DataFrame:
-        """Load data from CSV file"""
+    EXPECTED_COLUMNS = {
+        "hotels": ["name", "destination", "price_per_night", "rating", "location"],
+        "activities": ["name", "destination", "description", "duration_minutes", "tags", "rating"],
+    }
+
+    def __init__(self, datasource: str = "api", url: str = None):
+        self.datatype = datasource.lower()
+        self.url = f"{url}/api" if url else None
+
+        # Load datasets
+        self.hotels_df = self.load_data("hotels")
+        self.attractions_df = self.load_data("activities")
+
+        print(f"✅ Hotels loaded: {len(self.hotels_df)} rows")
+        print(f"✅ Attractions loaded: {len(self.attractions_df)} rows")
+
+    def load_data(self, name: str) -> pd.DataFrame:
+        """
+        Load data from API (preferred) or CSV fallback.
+        Always returns a DataFrame with expected columns.
+        """
+        expected_cols = self.EXPECTED_COLUMNS.get(name, [])
+
+        # --- Try API ---
+        if self.datatype == "api" and self.url:
+            try:
+                url = f"{self.url}/{name}"
+                print(f"🌍 Fetching {name} from API: {url}")
+                response = requests.get(url, timeout=10)
+                response.raise_for_status()
+
+                data = response.json().get('data', [])
+                df = pd.DataFrame(data)
+                print(f"Raw {name} data from API: {df.shape[0]} rows, columns={df.columns.tolist()}")
+                # Ensure expected columns exist
+                for col in expected_cols:
+                    if col not in df.columns:
+                        df[col] = None  # fill missing with null
+
+                print(f"✅ {name.capitalize()} from API: {df.shape[0]} rows, columns={df.columns.tolist()}")
+                return df[expected_cols] if expected_cols else df
+
+            except Exception as e:
+                print(f"⚠️ API fetch failed for {name}: {e}")
+
+        # --- Try CSV Fallback ---
+        filename = f"data/{name}.csv"
         try:
+            print(f"📂 Loading {name} from CSV: {filename}")
             df = pd.read_csv(filename)
-            print(f"Loaded {filename}: {df.columns.tolist()}")
-            return df
+
+            # Ensure expected columns
+            for col in expected_cols:
+                if col not in df.columns:
+                    df[col] = None
+
+            print(f"✅ {name.capitalize()} from CSV: {df.shape[0]} rows, columns={df.columns.tolist()}")
+            return df[expected_cols] if expected_cols else df
+
         except Exception as e:
-            print(f"Warning: Could not load {filename}: {e}")
-            # Return empty DataFrame with expected columns
-            if 'hotel' in filename:
-                return pd.DataFrame(columns=['name', 'city', 'price', 'rating', 'type', 'features'])
-            else:
-                return pd.DataFrame(columns=['name', 'city', 'type', 'category', 'price_range', 'duration_hours', 'best_time'])
-    
+            print(f"⚠️ Could not load CSV for {name}: {e}")
+
+        # --- Final fallback: empty DataFrame with expected columns ---
+        print(f"⚠️ Returning empty DataFrame for {name}")
+        return pd.DataFrame(columns=expected_cols)
+
+
     def analyze_user_input(self, user_message: str) -> Dict[str, Any]:
         """Analyze user message to extract travel preferences"""
         analysis = {
@@ -113,8 +160,8 @@ class AITravelGuide:
         df = self.hotels_df.copy()
         
         # Filter by destination
-        if analysis['destination'] and 'city' in df.columns:
-            df = df[df['city'].str.contains(analysis['destination'], case=False, na=False)]
+        if analysis['destination'] and 'destination' in df.columns:
+            df = df[df['destination'].str.contains(analysis['destination'], case=False, na=False)]
         
         # Filter by budget
         budget_ranges = {
@@ -172,8 +219,8 @@ class AITravelGuide:
         df = self.attractions_df.copy()
         
         # Filter by destination
-        if analysis['destination'] and 'city' in df.columns:
-            df = df[df['city'].str.contains(analysis['destination'], case=False, na=False)]
+        if analysis['destination'] and 'destination' in df.columns:
+            df = df[df['destination'].str.contains(analysis['destination'], case=False, na=False)]
         
         # Calculate scores for each attraction
         scores = []

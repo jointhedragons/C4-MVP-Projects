@@ -3,7 +3,7 @@ const Activity = require("../models/Activity");
 const escReg = require("../utils/escapeRegex");
 
 // GET activities
-router.get("/activities", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const { 
       page = 1, 
@@ -37,7 +37,7 @@ router.get("/activities", async (req, res, next) => {
       count: activities.length, 
       page: Number(page), 
       limit: Number(limit), 
-      activities 
+      data: activities 
     });
   } catch (err) {
     next(err);
@@ -45,7 +45,7 @@ router.get("/activities", async (req, res, next) => {
 });
 
 // Get By ID
-router.get("/activities/:id", async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const activity = await Activity.findById(req.params.id);
     if (!activity) return res.status(404).json({ message: "Activity not found" });
@@ -56,7 +56,7 @@ router.get("/activities/:id", async (req, res, next) => {
 });
 
 // Create activity
-router.post("/activities", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     const newActivity = new Activity(req.body);
     await newActivity.save();
@@ -67,7 +67,7 @@ router.post("/activities", async (req, res, next) => {
 });
 
 // Update activity
-router.put("/activities/:id", async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   try {
     const updatedActivity = await Activity.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedActivity) return res.status(404).json({ message: "Activity not found" });
@@ -78,7 +78,7 @@ router.put("/activities/:id", async (req, res, next) => {
 });
 
 // Delete activity
-router.delete("/activities/:id", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
     const deletedActivity = await Activity.findByIdAndDelete(req.params.id);
     if (!deletedActivity) return res.status(404).json({ message: "Activity not found" });

@@ -40,7 +40,7 @@ router.get("/", async (req, res, next) => {
       count: hotels.length, 
       page: Number(page), 
       limit: Number(limit), 
-      hotels 
+      data: hotels 
     });
   } catch (err) {
     next(err);

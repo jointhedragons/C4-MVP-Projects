@@ -6,7 +6,8 @@ const activitySchema = new mongoose.Schema({
   description: String,
   duration_minutes: Number,
   tags: [String],
-  rating: Number
+  rating: Number,
+  image: { type: String },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Activity', activitySchema);

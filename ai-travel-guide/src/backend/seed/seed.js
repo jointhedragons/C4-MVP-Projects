@@ -1,6 +1,36 @@
 const connectDB = require('../config/db');
 const Hotel = require('../models/Hotel');
 const Activity = require('../models/Activity');
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+
+const seedAdmin = (deleteAll = true) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (deleteAll) {
+        await User.deleteMany({ role: 'admin' });
+      }
+
+      const adminEmail = process.env.ADMIN_EMAIL || 'admin@gmail.com';
+      const adminPassword = process.env.ADMIN_PASSWORD || 'P@$$w0rd';
+      
+      const existingAdmin = await User.find({ email: adminEmail });
+      if (existingAdmin.length === 0) {
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(adminPassword, salt);
+        const adminUser = new User({ name: 'Admin', email: adminEmail, passwordHash, role: 'admin' });
+        await adminUser.save();
+        console.log(`Admin user created with email: ${adminEmail} and password: ${adminPassword}`);
+        resolve(1);
+      } else {
+        console.log('Admin user already exists');
+        resolve(0);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
 
 async function seedHotels(deleteAll = true) {
   await connectDB(process.env.MONGO_URI || 'mongodb://localhost:27017/ai_travel');
@@ -56,12 +86,13 @@ async function seedActivities(deleteAll = true) {
 async function seedAll(deleteAll = true) {
   seeded_hotels = await seedHotels(deleteAll);
   seeded_activities = await seedActivities(deleteAll);
+  await seedAdmin(deleteAll);
 
   console.log(`Seeded ${seeded_hotels} hotels and ${seeded_activities} activities.`);
   process.exit(0);
 }
 
-module.exports = { seedHotels, seedActivities, seedAll };
+module.exports = { seedHotels, seedActivities, seedAdmin, seedAll };
 
 // For direct run
 if (require.main === module) {

@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Hotel = require("../models/Hotel");
 const escReg = require("../utils/escapeRegex");
 const { auth, authorizeRoles } = require("../middleware/auth");
+const upload = require("../middleware/upload");
 
 // ==============================
 // GET hotels (all authenticated users)
@@ -66,30 +67,32 @@ router.get("/:id", auth, async (req, res, next) => {
 // ==============================
 // CREATE hotel (admin + ai roles)
 // ==============================
-router.post("/", auth, authorizeRoles("admin", "ai"), async (req, res, next) => {
+router.post("/", auth, authorizeRoles("admin", "ai"), upload.single("image"), async (req, res) => {
   try {
-    const newHotel = new Hotel(req.body);
-    await newHotel.save();
-    res.status(201).json(newHotel);
+    const hotel = new Hotel({
+      ...req.body,
+      image: req.file ? `/uploads/${req.file.filename}` : null,
+    });
+    await hotel.save();
+    res.status(201).json(hotel);
   } catch (err) {
-    next(err);
+    res.status(400).json({ error: err.message });
   }
 });
 
 // ==============================
 // UPDATE hotel (admin + ai roles)
 // ==============================
-router.put("/:id", auth, authorizeRoles("admin", "ai"), async (req, res, next) => {
+router.put("/:id/image", auth, authorizeRoles("admin", "ai"), upload.single("image"), async (req, res) => {
   try {
-    const updatedHotel = await Hotel.findByIdAndUpdate(
-      req.params.id, 
-      req.body, 
+    const hotel = await Hotel.findByIdAndUpdate(
+      req.params.id,
+      { image: req.file ? `/uploads/${req.file.filename}` : null },
       { new: true }
     );
-    if (!updatedHotel) return res.status(404).json({ message: "Hotel not found" });
-    res.json(updatedHotel);
+    res.json(hotel);
   } catch (err) {
-    next(err);
+    res.status(400).json({ error: err.message });
   }
 });
 

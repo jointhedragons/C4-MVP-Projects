@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Activity = require("../models/Activity");
 const escReg = require("../utils/escapeRegex");
 const { auth, authorizeRoles } = require("../middleware/auth");
+const upload = require("../middleware/upload");
 
 // ==============================
 // GET activities (all roles allowed, must be logged in)
@@ -62,30 +63,32 @@ router.get("/:id", auth, async (req, res, next) => {
 // ==============================
 // CREATE (admin + ai roles)
 // ==============================
-router.post("/", auth, authorizeRoles("admin", "ai"), async (req, res, next) => {
+router.post("/", auth, authorizeRoles("admin", "ai"), upload.single("image"), async (req, res) => {
   try {
-    const newActivity = new Activity(req.body);
-    await newActivity.save();
-    res.status(201).json(newActivity);
+    const activity = new Activity({
+      ...req.body,
+      image: req.file ? `/uploads/${req.file.filename}` : null,
+    });
+    await activity.save();
+    res.status(201).json(activity);
   } catch (err) {
-    next(err);
+    res.status(400).json({ message: err.message });
   }
 });
 
 // ==============================
 // UPDATE (admin + ai roles)
 // ==============================
-router.put("/:id", auth, authorizeRoles("admin", "ai"), async (req, res, next) => {
+router.put("/:id", auth, authorizeRoles("admin", "ai"), upload.single("image"), async (req, res) => {
   try {
-    const updatedActivity = await Activity.findByIdAndUpdate(
-      req.params.id, 
-      req.body, 
+    const activity = await Activity.findByIdAndUpdate(
+      req.params.id,
+      { image: req.file ? `/uploads/${req.file.filename}` : null },
       { new: true }
     );
-    if (!updatedActivity) return res.status(404).json({ message: "Activity not found" });
-    res.json(updatedActivity);
+    res.json(activity);
   } catch (err) {
-    next(err);
+    res.status(400).json({ message: err.message });
   }
 });
 

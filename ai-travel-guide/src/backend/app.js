@@ -18,6 +18,8 @@ app.use('/api/hotels', hotelRoutes);
 app.use('/api/activities', activityRoutes);
 app.use('/api', seedRoutes); 
 
+app.use("/uploads", express.static("uploads"));
+
 app.use(errorHandler);
 
 module.exports = app;

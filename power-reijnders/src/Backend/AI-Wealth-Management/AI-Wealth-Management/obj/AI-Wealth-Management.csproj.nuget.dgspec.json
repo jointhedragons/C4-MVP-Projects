@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/macbook/Downloads/AI-Wealth-Management/AI-Wealth-Management/AI-Wealth-Management.csproj": {}
+    "/Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/AI-Wealth-Management.csproj": {}
   },
   "projects": {
-    "/Users/macbook/Downloads/AI-Wealth-Management/AI-Wealth-Management/AI-Wealth-Management.csproj": {
+    "/Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/AI-Wealth-Management.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/macbook/Downloads/AI-Wealth-Management/AI-Wealth-Management/AI-Wealth-Management.csproj",
+        "projectUniqueName": "/Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/AI-Wealth-Management.csproj",
         "projectName": "AI-Wealth-Management",
-        "projectPath": "/Users/macbook/Downloads/AI-Wealth-Management/AI-Wealth-Management/AI-Wealth-Management.csproj",
+        "projectPath": "/Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/AI-Wealth-Management.csproj",
         "packagesPath": "/Users/macbook/.nuget/packages/",
-        "outputPath": "/Users/macbook/Downloads/AI-Wealth-Management/AI-Wealth-Management/obj/",
+        "outputPath": "/Users/macbook/Documents/Study Corner/Dragons/C4-MVP-Projects/power-reijnders/src/Backend/AI-Wealth-Management/AI-Wealth-Management/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/macbook/.nuget/NuGet/NuGet.Config"
@@ -47,6 +47,14 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.9, )"
+            },
+            "OpenAI": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            },
+            "OpenAI.API": {
+              "target": "Package",
+              "version": "[1.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

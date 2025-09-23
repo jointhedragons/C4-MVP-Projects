@@ -7,7 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
+
 builder.Services.AddSingleton<RecommendationService>();
+builder.Services.AddSingleton<IInvestmentAdviceService, InvestmentAdviceService>();
 
 var app = builder.Build();
 

@@ -7,217 +7,223 @@
 **Cycle:** 4
 
 ## Executive Summary
-[Brief 2-3 sentence summary of what this project aims to accomplish]
+The AI Talent Matching project is a 3-day MVP designed to streamline the process of connecting employers (HR) with suitable talent. The system enables HR to post jobs and instantly receive AI-powered recommendations for talents, while talents can view matching job opportunities. The project combines a simple UI, Redux-based state management, and integration with an AI API to deliver smart recommendations quickly.
 
 ## Business Requirements
 
 ### Problem Statement
-**Current Situation:** [Describe the current state/problem]  
-**Desired Outcome:** [What success looks like]  
-**Impact:** [Who benefits and how]
+**Current Situation:** Traditional job boards require manual searching and filtering, making it difficult for HR and talent to efficiently connect.
+**Desired Outcome:** Provide a platform where HR can post jobs and instantly receive recommended talents, and talents can see recommended jobs tailored to their profile.
+**Impact:** HR saves time in talent sourcing, while talents discover relevant opportunities faster.
 
 ### Success Metrics
-- **Primary Metric:** [Main way to measure success]
-- **Secondary Metrics:** [Additional success indicators]
-- **Timeline:** [When success should be achieved]
+- **Primary Metric:** Primary Metric: Accuracy and relevance of AI-generated job/talent recommendations.
+- **Secondary Metrics:** Number of jobs posted, number of recommendations viewed, user satisfaction in testing.
+- **Timeline:** Functional MVP delivered in 3 days.
 
 ### Target Users
-- **Primary Users:** [Main user group]
-- **Secondary Users:** [Additional user groups]
-- **User Personas:** [Brief description of typical users]
+- **Primary Users:** HR recruiters seeking talent.
+- **Secondary Users:** Job seekers (talents).
+- **User Personas:** HR's and Talents
 
 ### Business Value Proposition
-- **Value to Users:** [What users gain]
-- **Value to Business:** [Business benefits]
-- **Competitive Advantage:** [How this differentiates]
+- **Value to Users:** Saves time and effort by providing tailored recommendations.
+- **Value to Business:** Demonstrates proof-of-concept for an AI-powered job matching platform.
+- **Competitive Advantage:** AI-driven recommendations reduce manual effort compared to traditional job platforms.
 
 ## Functional Requirements
 
 ### Core Features (MVP Scope)
-1. **Feature 1:** [Name]
-   - **Description:** [What it does]
-   - **Priority:** [High/Medium/Low]
-   - **Acceptance Criteria:** [Specific requirements]
+1. **User Profiles:** [HR & Talent]
+   - **Description:** Both HR and talents can create and edit their                          profiles.
+   - **Priority:** High
+   - **Acceptance Criteria:** Users can log in, update info, and persist changes via Redux/Local Storage.
 
-2. **Feature 2:** [Name]
-   - **Description:** [What it does]
-   - **Priority:** [High/Medium/Low]
-   - **Acceptance Criteria:** [Specific requirements]
+2. **Job Posting & CRUD Operations:**
+   - **Description:** HR can post, edit, and delete jobs.
+   - **Priority:** High
+   - **Acceptance Criteria:** CRUD operations work with Local Storage and Redux.
 
-3. **Feature 3:** [Name]
-   - **Description:** [What it does]
-   - **Priority:** [High/Medium/Low]
-   - **Acceptance Criteria:** [Specific requirements]
+3. **AI Talent & Job Recommendations:** 
+   - **Description:** Integrate AI API to generate recommendations for jobs and talents.
+   - **Priority:** High
+   - **Acceptance Criteria:** Relevant recommendations display correctly in UI.
 
 ### User Stories
-- **As a** [user type], **I want** [functionality] **so that** [benefit]
-- **As a** [user type], **I want** [functionality] **so that** [benefit]
-- **As a** [user type], **I want** [functionality] **so that** [benefit]
+- **As a** HR recruiter, **I want** post jobs easily **so that** I can quickly find talents.
+- **As a** talent, **I want** to see job recommendations **so that** I can apply to relevant opportunities.
+- **As a** HR, **I want** AI-generated recommendations **so that** I can save time filtering applicants.
 
 ### User Flow
-1. [Step 1: User action]
-2. [Step 2: System response]
-3. [Step 3: User action]
-4. [Step 4: Final outcome]
+1. HR logs in → posts a job.
+2. AI API recommends matching talents → displayed in HR dashboard.
+3. Talent logs in → sees recommended jobs
+4. Users interact with recommendations.
 
 ## Technical Requirements
 
 ### Performance Requirements
-- **Response Time:** [Maximum acceptable response time]
-- **Throughput:** [Expected number of users/requests]
-- **Availability:** [Uptime requirements]
-- **Scalability:** [Growth expectations]
-
+- **Response Time:** < 2 seconds for UI actions, < 5 seconds for AI API response.
+- **Throughput:** Support up to 50 simultaneous users (MVP).
+- **Availability:** MVP hosted for demo (local/GitHub Pages).
+- **Scalability:** Should be extendable to cloud backend later.
+  
 ### Security Requirements
-- **Authentication:** [How users will be authenticated]
-- **Authorization:** [What permissions are needed]
-- **Data Protection:** [How sensitive data is protected]
-- **Privacy:** [Privacy considerations]
+- **Authentication:** Simple role-based login (HR/Talent).
+- **Authorization:** HR and talents have separate permissions.
+- **Data Protection:** No sensitive data beyond demo profiles.
+- **Privacy:** Demo-only; no real personal data collected.
 
 ### Compatibility Requirements
-- **Browsers:** [Supported browsers and versions]
-- **Devices:** [Mobile, tablet, desktop requirements]
-- **Operating Systems:** [OS compatibility]
-- **Screen Sizes:** [Responsive design requirements]
-
+- **Browsers:** Chrome, Edge, Firefox (latest versions).
+- **Devices:** Desktop-first; responsive design for mobile.
+- **Operating Systems:** Windows, macOS, Linux.
+- **Screen Sizes:** Responsive grid layout with Bootstrap.
+- 
 ### Integration Requirements
-- **External APIs:** [Third-party services to integrate]
-- **Database:** [Data storage requirements]
-- **File Storage:** [File handling needs]
-- **Payment Processing:** [If applicable]
+- **External APIs:** AI API for recommendations.
+- **Database:** Redux + Local Storage (MVP).
+- **File Storage:** Not required for MVP.
+- **Payment Processing:** Not applicable.
 
 ## AI/ML Integration (if applicable)
 
 ### AI Component Description
-- **Type of AI:** [Machine Learning, NLP, Computer Vision, etc.]
-- **Purpose:** [What the AI accomplishes]
-- **Model Source:** [Pre-trained, custom, API service]
+- **Type of AI:** Recommendation system (via API).
+- **Purpose:** Match jobs with talents and vice versa.
+- **Model Source:** External API.
 
 ### Data Requirements
-- **Training Data:** [What data is needed for training]
-- **Input Data:** [What data the AI processes]
-- **Data Quality:** [Requirements for data quality]
-- **Data Privacy:** [How user data is handled]
+- **Training Data:** Not applicable (using API).
+- **Input Data:** Job descriptions, talent skills.
+- **Data Quality:** Basic structured inputs.
+- **Data Privacy:** Minimal, no sensitive data.
 
 ### Performance Expectations
-- **Accuracy:** [Expected accuracy percentage]
-- **Speed:** [Response time requirements]
-- **Reliability:** [Fallback strategies]
+- **Accuracy:** 70–80% relevance in recommendations.
+- **Speed:** < 5 seconds per query.
+- **Reliability:** API fallback to mock data.
 
 ### Fallback Strategy
-- **When AI Fails:** [What happens if AI is unavailable]
-- **Manual Override:** [Can users override AI decisions]
-- **Error Handling:** [How AI errors are managed]
-
+- **When AI Fails:** Show static mock recommendations from Redux.
+- **Manual Override:** Users can still browse job/talent listings.
+- **Error Handling:** Clear UI message when API unavailable.
+- 
 ## Project Constraints
 
 ### Time Constraints
 - **Development Window:** 3 days
-- **Daily Time Commitment:** [Hours per day per team member]
-- **Milestone Deadlines:** [Key checkpoints]
+- **Daily Time Commitment:** ~6–8 hours per member.
+- **Milestone Deadlines:** Daily standups, end-of-day deliverables.
 
 ### Resource Constraints
-- **Team Size:** 4 members (1 lead + 3 developers)
-- **Budget:** [Any budget limitations]
-- **Technology Stack:** [Approved technologies only]
-- **External Dependencies:** [Third-party service limitations]
+- **Team Size:** 2 members (2 developers)
+- **Budget:** Zero (student MVP).
+- **Technology Stack:** React, Redux, Local Storage, Bootstrap, AI API.
+- **External Dependencies:** AI API availability.
 
 ### Scope Constraints
-- **Must Have:** [Non-negotiable features]
-- **Should Have:** [Important but not critical]
-- **Could Have:** [Nice to have if time permits]
-- **Won't Have:** [Explicitly out of scope]
+- **Must Have:** Job posting, profiles, AI recommendations.
+- **Should Have:** CRUD persistence in Local Storage.
+- **Could Have:** Advanced filtering, analytics.
+- **Won't Have:** Full backend or real authentication system.
 
 ## Technical Architecture
 
 ### System Architecture
-- **Frontend:** [Technology and approach]
-- **Backend:** [Technology and approach]
-- **Database:** [Database choice and structure]
-- **Hosting:** [Where the application will run]
+- **Frontend:** React + Redux Toolkit + Bootstrap.
+- **Backend:** None (dummy data with Local Storage).
+- **Database:** Local Storage (temporary).
+- **Hosting:** GitHub Pages.
 
 ### Technology Stack
-- **Frontend Technologies:** [List technologies]
-- **Backend Technologies:** [List technologies]
-- **Database Technologies:** [List technologies]
-- **DevOps/Deployment:** [Deployment strategy]
+- **Frontend Technologies:** React, Redux Toolkit, Bootstrap.
+- **Backend Technologies:** None for MVP.
+- **Database Technologies:** Local Storage.
+- **DevOps/Deployment:** GitHub repository + GitHub Pages.
 
 ### Data Model (if applicable)
 ```
-Entity: [EntityName]
-- field1: type - description
-- field2: type - description
+Entity: Job
+- id: string
+- title: string
+- description: string
+- skillsRequired: array
+- location: string
 
-Relationships:
-- [Entity1] → [Entity2]: [relationship type]
+Entity: Talent
+- id: string
+- name: string
+- skills: array
+- experience: string
 ```
 
 ## Acceptance Criteria
 
 ### Definition of Done
-- [ ] All core features implemented and tested
-- [ ] Code is documented and follows team standards
-- [ ] Application is deployed and accessible
-- [ ] Documentation is complete and up-to-date
-- [ ] Team presentation is prepared
+
+ ✅Core features implemented and tested.
+
+ ✅Code documented and readable.
+
+ ✅MVP deployed on GitHub Pages.
+
+ ✅Documentation complete.
 
 ### Quality Gates
-- [ ] Code passes all tests
-- [ ] Performance meets requirements
-- [ ] Security requirements are met
-- [ ] User experience is acceptable
-- [ ] Documentation is complete
+- ✅ Code passes all tests
+- ✅ Performance meets requirements
+- ✅ User experience is acceptable
+- ✅ Documentation is complete
 
 ### Success Criteria
-- [ ] [Specific measurable criterion 1]
-- [ ] [Specific measurable criterion 2]
-- [ ] [Specific measurable criterion 3]
-- [ ] [Specific measurable criterion 4]
+- ✅ Users can post jobs.
+- ✅ Users can edit and delete jobs.
+- ✅ Talents can see recommendations.
+- ✅ HR can see recommended talents.
 
 ## Risks and Mitigation
 
 ### Technical Risks
-- **Risk 1:** [Description] → **Mitigation:** [Strategy]
-- **Risk 2:** [Description] → **Mitigation:** [Strategy]
+- **Risk 1:** AI API downtime → Mitigation: Mock data fallback.
+- **Risk 2:** Local Storage limitations → Mitigation: Keep scope minimal.
 
 ### Timeline Risks
-- **Risk 1:** [Description] → **Mitigation:** [Strategy]
-- **Risk 2:** [Description] → **Mitigation:** [Strategy]
-
+- **Risk 1:** Limited 3-day window → Mitigation: Strict task breakdown.
+- **Risk 2:** Risk 2: Unexpected bugs → Mitigation: Allocate final day to testing.
 ### Team Risks
-- **Risk 1:** [Description] → **Mitigation:** [Strategy]
-- **Risk 2:** [Description] → **Mitigation:** [Strategy]
+- **Risk 1:** Miscommunication → Mitigation: Daily standups.
+- **Risk 2:** Unequal workload → Mitigation: Task assignment tracking.
 
 ## Communication Plan
 
 ### Daily Standups
-- **Time:** [When daily check-ins occur]
-- **Duration:** [How long]
-- **Format:** [In-person, video call, etc.]
+- **Time:** 9:00 AM.
+- **Duration:** 15–20 minutes.
+- **Format:** In-person meeting.
 
 ### Progress Tracking
-- **Method:** [How progress is tracked]
-- **Frequency:** [How often updates are shared]
-- **Tools:** [What tools are used]
+- **Method:** Daily iteration summaries.
+- **Frequency:** Once Daily
+- **Tools:** GitHub, Notion/Docs.
 
 ### Decision Making
-- **Process:** [How decisions are made]
-- **Authority:** [Who has final say]
-- **Documentation:** [How decisions are recorded]
-
+- **Process:** Consensus with lead final decision.
+- **Authority:** Team lead has final say.
+- **Documentation:** Logged in GitHub repo.
 ## Appendices
 
 ### Glossary
-- **Term 1:** [Definition]
-- **Term 2:** [Definition]
+- **CRUD:** Create, Read, Update, Delete.
+- **AI API:** External service providing recommendations.
 
 ### References
-- [Link 1: Description]
-- [Link 2: Description]
+- Redux Toolkit Documentation (https://redux-toolkit.js.org/)
+- [React Official Docs](https://react.dev/)
 
 ### Version History
-- **v1.0:** [Date] - Initial requirements document
-- **v1.1:** [Date] - [Description of changes]
+- **v1.0:** [2025-09-17] - Initial requirements document
+- **v1.1:** [2025-09-19] - Updated with final MVP scope.
 
 ---
 *This requirements document serves as the foundation for our 3-day MVP development process.*

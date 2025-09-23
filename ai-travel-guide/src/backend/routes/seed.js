@@ -3,7 +3,7 @@ const seedHotels = require("../seed/seed").seedHotels;
 const seedActivities = require("../seed/seed").seedActivities;
 
 router.post("/seed", async (req, res, next) => {
-  const { hotels = 0, activities = 0 } = req.body;
+  const { hotels = 0, activities = 0 } = req.query;
   try {
     const seeded = {};
     if (hotels > 0) {

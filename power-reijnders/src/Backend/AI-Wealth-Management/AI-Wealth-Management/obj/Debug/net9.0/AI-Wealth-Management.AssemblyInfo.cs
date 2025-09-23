@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AI-Wealth-Management")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ccc4c8ab4cac54142f4ff72c601b49c4bc899776")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2980097ff8def22be934eb5fa9c7f2d2cf6a49c")]
 [assembly: System.Reflection.AssemblyProductAttribute("AI-Wealth-Management")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AI-Wealth-Management")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

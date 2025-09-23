@@ -15,19 +15,6 @@ private readonly IInvestmentAdviceService _adviceService;
         _adviceService = adviceService;
     }
     
-    [HttpPost("ask")]
-    public async Task<IActionResult> Ask([FromBody] InvestmentRequest req)
-    {
-        try
-        {
-            var answer = await _adviceService.GetAdviceAsync(req);
-            return Ok(new { Answer = answer });
-        }
-        catch (HttpRequestException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
     [HttpGet("ask")]
     public async Task<IActionResult> AskGet(
         [FromQuery] decimal capital,

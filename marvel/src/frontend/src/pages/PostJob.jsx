@@ -1,37 +1,90 @@
 import { MapPin, DollarSign, Plus, X, Briefcase } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addRequirements,
-  addSkills,
-  createPost,
-  removeRequirements,
-  removeSkills,
-} from "../features/hr/hrSlice";
+import { createPost, updatePost } from "../features/hr/hrSlice";
+import { useState } from "react";
+import { nanoid } from "@reduxjs/toolkit";
+import { useNavigate, useParams } from "react-router";
 
 function PostJob() {
-  const job_post = useSelector((state) => state.hr.jobPost);
-  const { register, handleSubmit, getValues, reset } = useForm({
-    defaultValues: job_post,
-  });
-  const requirments = job_post.requirements;
-  const skills = job_post.skills_required;
+  let params = useParams();
+  const id = params.id;
+  const {
+    title,
+    company,
+    date,
+    description,
+    experience_level,
+    job_type,
+    location,
+    max_salary,
+    min_salary,
+    skills_required,
+    requirements: requiremntsData,
+  } = useSelector((state) =>
+    id ? state.hr.jobPost.find((post) => post.id === id) : {}
+  );
 
+  const { register, handleSubmit, getValues, reset } = useForm({
+    defaultValues: {
+      title,
+      company,
+      date,
+      description,
+      experience_level,
+      job_type,
+      location,
+      max_salary,
+      min_salary,
+    },
+  });
+  const [skills, setSkills] = useState(() => (id ? skills_required : []));
+  const [requirements, setRequirments] = useState(() =>
+    id ? requiremntsData : []
+  );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  function handleAddRequirements(requirement) {
+    if (!requirements || requirements.includes(requirement)) return;
+    setRequirments([...requirements, requirement]);
+  }
+  function handleRemoveRequirements(requirement) {
+    setRequirments(requirements.filter((req) => req !== requirement));
+  }
+
+  function handleAddSkills(skill) {
+    if (!skill || skills.includes(skill)) return;
+    setSkills([...skills, skill]);
+  }
+  function handleRemoveSkills(skill) {
+    setSkills(skills.filter((sk) => sk !== skill));
+  }
+
   function onSubmit(data) {
     const formatData = {
-      title: data.title.trime(),
+      id: nanoid(),
       company: data.company.trim(),
+      experience_level: data.experience_level.trim(),
+      job_type: data.job_type.trim(),
       location: data.location.trim(),
-      job_type: data.job_type,
-      experience_level: data.experience_level,
-      min_salary: data.min_salary,
       max_salary: data.max_salary,
+      min_salary: data.min_salary,
       description: data.description.trim(),
-      requirements: data.requirements,
-      skills_required: data.skills_required,
+      requirements: requirements,
+      skills_required: skills,
+      title: data.title.trim(),
+      date: new Date().toLocaleDateString(),
     };
-    dispatch(createPost(formatData));
+    if (id) {
+      dispatch(updatePost(id, formatData));
+    } else {
+      dispatch(createPost(formatData));
+    }
+    navigate("/hr-dashboard");
+    reset();
+    setSkills([]);
+    setRequirments([]);
   }
 
   return (
@@ -193,9 +246,7 @@ function PostJob() {
               rows={6}
               className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Describe the role, responsibilities, and what makes this opportunity exciting..."
-              {...register("description", {
-                required: "Job description is required",
-              })}
+              {...register("description")}
             />
           </div>
 
@@ -209,22 +260,23 @@ function PostJob() {
                 type="text"
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Add a requirement (e.g., Bachelor's degree in Computer Science)"
-                {...register("requirements", {
-                  required: "At least one requirement is required",
-                })}
+                {...register("requirements")}
               />
               <button
                 type="button"
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors cursor-pointer"
-                onClick={() =>
-                  dispatch(addRequirements(getValues("requirements").trim()))
-                }
+                onClick={() => {
+                  handleAddRequirements(getValues("requirements").trim());
+                  reset({
+                    requirements: "",
+                  });
+                }}
               >
                 <Plus className="h-4 w-4" />
               </button>
             </div>
             <div className="space-y-2">
-              {requirments.map((requirement, index) => (
+              {requirements.map((requirement, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -232,7 +284,7 @@ function PostJob() {
                   <span className="text-sm text-gray-700">{requirement}</span>
                   <button
                     type="button"
-                    onClick={() => dispatch(removeRequirements(requirement))}
+                    onClick={() => handleRemoveRequirements(requirement)}
                     className="text-red-600 hover:text-red-800 cursor-pointer"
                   >
                     <X className="h-4 w-4" />
@@ -252,16 +304,17 @@ function PostJob() {
                 type="text"
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Add a required skill (e.g., JavaScript, Project Management)"
-                {...register("skills_required", {
-                  required: "At least one skill is required",
-                })}
+                {...register("skills_required")}
               />
               <button
                 type="button"
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors cursor-pointer"
-                onClick={() =>
-                  dispatch(addSkills(getValues("skills_required").trim()))
-                }
+                onClick={() => {
+                  handleAddSkills(getValues("skills_required").trim());
+                  reset({
+                    skills_required: "",
+                  });
+                }}
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -275,7 +328,7 @@ function PostJob() {
                   {skill}
                   <button
                     type="button"
-                    onClick={() => dispatch(removeSkills(skill))}
+                    onClick={() => handleRemoveSkills(skill)}
                     className="ml-2 text-purple-600 hover:text-purple-800 cursor-pointer"
                   >
                     <X className="h-3 w-3" />
@@ -289,7 +342,11 @@ function PostJob() {
             <button
               type="button"
               className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-              onClick={() => reset()}
+              onClick={() => {
+                reset();
+                setSkills([]);
+                setRequirments([]);
+              }}
             >
               Clear Form
             </button>
@@ -297,7 +354,7 @@ function PostJob() {
               type="submit"
               className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
             >
-              Post Job
+              {id ? "Update Job" : "Post Job"}
             </button>
           </div>
         </form>

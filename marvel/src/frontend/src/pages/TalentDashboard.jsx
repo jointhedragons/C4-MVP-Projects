@@ -17,9 +17,6 @@ const TalentDashboard = () => {
       const jobs = await recommendJobs(jobPost, talentProfile);
       return jobs;
     },
-    enabled: !!jobPost && !!talentProfile, // only run if data is ready
-    staleTime: Infinity,
-    cacheTime: Infinity,
   });
 
   const getMatchScoreColor = (score) => {

@@ -29,6 +29,7 @@ function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="search-jobs" element={<SearchJob />} />
               <Route path="post-job" element={<PostJob />} />
+              <Route path="post-job/:id" element={<PostJob />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

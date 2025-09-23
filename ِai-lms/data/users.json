@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Mohamed",
+      "email": "moh@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "email": "bob@example.com",
+      "password": "bobpass567"
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "email": "charlie@example.com",
+      "password": "charliepwd"
+    },
+    {
+      "id": 4,
+      "name": "Diana",
+      "email": "diana@example.com",
+      "password": "diana2025"
+    },
+    {
+      "id": 5,
+      "name": "Eve",
+      "email": "eve@example.com",
+      "password": "evepass789"
+    },
+    {
+      "email": "yousef@gamil.com",
+      "password": "24681012",
+      "name": "Youssef Ayman",
+      "id": 6
+    },
+    {
+      "name": "Arwa Ayman",
+      "email": "arwa@gmail.com",
+      "password": "12345678",
+      "id": 7
+    }
+  ]
+}

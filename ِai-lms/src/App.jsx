@@ -1,10 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 
 import AppLayout from "./AppLayout";
 import HomePage from "./pages/HomePage";
 import LoginSlice from "./features/auth/LoginSlice";
 import SignupSlice from "./features/auth/SignupSlice";
-import { AuthProvider } from "./contexts/AuthContext";
+import ProfilePage from "./pages/ProfilePage";
+import CoursesPage from "./pages/CoursesPage";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,14 @@ const router = createBrowserRouter([
       {
         path: "signupslice",
         element: <SignupSlice />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
+      },
+      {
+        path: "mycourses",
+        element: <CoursesPage />,
       },
     ],
   },

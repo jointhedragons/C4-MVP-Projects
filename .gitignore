@@ -138,6 +138,7 @@ Cargo.lock
 config/secrets.yml
 .secrets
 secrets.json
+*appsettings.json
 
 # Build outputs
 dist/

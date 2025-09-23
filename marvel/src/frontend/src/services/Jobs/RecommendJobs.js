@@ -4,7 +4,7 @@ const ai = new GoogleGenAI({
   apiKey: "AIzaSyC2z-jB_SdE15a6cN5NNMenZizZdb1cSjQ",
 });
 
-export default async function main(job, talentProfile) {
+export default async function main(jobs, talentProfile) {
   // 1. Build the query string
   let query = `I have a talent profile and a list of job postings. 
 My goal is to recommend the best jobs for this talent based on required skills, experience level, and location.
@@ -16,7 +16,9 @@ Talent Profile:
 - Location: ${talentProfile.location}
 
 Job Postings:
-${ `
+${jobs
+  .map(
+    (job) => `
 - Company: ${job.company}
   Title: ${job.title}
   Description: ${job.description}
@@ -28,7 +30,9 @@ ${ `
   Skills Required: ${job.skills_required.join(", ")}
   Requirements: ${job.requirements.join(", ")}
   Date: ${job.date}
-`}
+`
+  )
+  .join("\n")}
 
 ⚠️ Important:
 - Always return the full job object by **copying the fields exactly as they are given** ("company", "description", "experience_level", "job_type", "location", "max_salary", "min_salary", "requirements", "skills_required", "title", "date").
@@ -54,40 +58,40 @@ The JSON must strictly follow this format:
   }
 ]`;
 
-const jobSchema = {
-  type: "array",
-  items: {
-    type: "object",
-    properties: {
-      company: { type: "string" },
-      description: { type: "string" },
-      experience_level: { type: "string" },
-      job_type: { type: "string" },
-      location: { type: "string" },
-      max_salary: { type: "string" },
-      min_salary: { type: "string" },
-      requirements: { type: "array", items: { type: "string" } },
-      skills_required: { type: "array", items: { type: "string" } },
-      title: { type: "string" },
-      date: { type: "string" },
-      score: { type: "number" },
+  const jobSchema = {
+    type: "array",
+    items: {
+      type: "object",
+      properties: {
+        company: { type: "string" },
+        description: { type: "string" },
+        experience_level: { type: "string" },
+        job_type: { type: "string" },
+        location: { type: "string" },
+        max_salary: { type: "string" },
+        min_salary: { type: "string" },
+        requirements: { type: "array", items: { type: "string" } },
+        skills_required: { type: "array", items: { type: "string" } },
+        title: { type: "string" },
+        date: { type: "string" },
+        score: { type: "number" },
+      },
+      required: [
+        "company",
+        "description",
+        "experience_level",
+        "job_type",
+        "location",
+        "max_salary",
+        "min_salary",
+        "requirements",
+        "skills_required",
+        "title",
+        "date",
+        "score",
+      ],
     },
-    required: [
-      "company",
-      "description",
-      "experience_level",
-      "job_type",
-      "location",
-      "max_salary",
-      "min_salary",
-      "requirements",
-      "skills_required",
-      "title",
-      "date",
-      "score",
-    ],
-  },
-};
+  };
 
   try {
     const response = await ai.models.generateContent({

@@ -11,13 +11,20 @@ const TalentDashboard = () => {
     data: jobRecommendations = [],
     isLoading,
     isError,
+    error,
   } = useQuery({
     queryKey: ["recommendedJobs", jobPost, talentProfile],
     queryFn: async () => {
+      console.log(jobPost);
       const jobs = await recommendJobs(jobPost, talentProfile);
+      // console.log(jobs);
       return jobs;
     },
   });
+
+  if (isError) {
+    console.error("Error fetching jobs:", error);
+  }
 
   const getMatchScoreColor = (score) => {
     if (score >= 80) return "text-green-600 bg-green-100";

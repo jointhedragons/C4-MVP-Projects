@@ -42,7 +42,7 @@ export const Navigation = () => {
         ];
 
   const handleLogOut = () => {
-    localStorage.clear();
+    // localStorage.clear();
     navigate("/");
   };
 

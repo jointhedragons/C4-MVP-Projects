@@ -39,7 +39,6 @@ router.get("/", async (req, res, next) => {
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
-    console.log(hotels[0]);
     res.json({ 
       total, 
       count: hotels.length, 

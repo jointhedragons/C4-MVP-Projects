@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
 
 const activityItemSchema = new mongoose.Schema({
-  name: String,
-  description: String,
-  time: String,
-  location: String,
+  activity: { type: mongoose.Schema.Types.ObjectId, ref: 'Activity', required: true }, // reference to activity
+  time: { type: String, default: '' }, // optional: Morning, Afternoon, Evening
+});
+
+const dayItinerarySchema = new mongoose.Schema({
+  day: { type: Number, required: true },
+  theme: { type: String, default: '' },
+  activities: [activityItemSchema],
 });
 
 const tripRequestSchema = new mongoose.Schema({
@@ -12,9 +16,9 @@ const tripRequestSchema = new mongoose.Schema({
   destination: { type: String, required: true },
   start_date: { type: Date, required: true },
   end_date: { type: Date, required: true },
-  budget: { type: Number },
+  budget: { type: Number }, // optional, can be AI calculated
   hotels: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Hotel' }], // suggested hotels
-  itinerary: [ [activityItemSchema] ], // array of days each with activities
+  itinerary: [dayItinerarySchema], // array of days, each with activities
   createdAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 

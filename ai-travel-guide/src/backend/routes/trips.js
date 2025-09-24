@@ -5,9 +5,6 @@ const Hotel = require("../models/Hotel");
 const Activity = require("../models/Activity");
 const escReg = require("../utils/escapeRegex");
 
-// ==============================
-// Create trip — generate plan + save
-// ==============================
 const getDuration = (start, end) => {
   const startDate = new Date(start);
   const endDate = new Date(end);
@@ -16,6 +13,9 @@ const getDuration = (start, end) => {
   return diffDays + (diffDays === 1 ? " day" : " days");
 }
 
+// ==============================
+// Create trip — generate plan + save
+// ==============================
 router.post("/", auth, async (req, res, next) => {
   try {
     const { destination, start_date, end_date, budget, interests } = req.body;
@@ -25,9 +25,8 @@ router.post("/", auth, async (req, res, next) => {
 
     // 1️⃣ Call the AI API
     const aiApiUrl = (process.env.AI_API_URL || "http://localhost:8000") + "/plan";
+    const query = `I'm planning a trip to ${destination} for ${getDuration(start_date, end_date)}. My budget is ${budget}. My interests are: ${interests}.`;
 
-    query = `I'm planning a trip to ${destination} for ${getDuration(start_date, end_date)}. My budget is ${budget}. My interests are: ${interests}.`;
-  
     const response = await fetch(aiApiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,33 +34,54 @@ router.post("/", auth, async (req, res, next) => {
     });
 
     const data = await response.json();
-
-    // 2️⃣ Replace hotel and activity IDs with objects
-    const Hotel = require("../models/Hotel");
-    const Activity = require("../models/Activity");
-
+    console.log(data); // --- IGNORE ---
+    
+    // 2️⃣ Fetch hotel and activity objects from DB
     const hotelObjects = await Hotel.find({
-      _id: { $in: data.plan.recommendations.hotels }
+      _id: { $in: data.plan.recommendations.hotels.map(h => h.id || h) }
     });
 
     const activityObjects = await Activity.find({
-      _id: { $in: data.plan.recommendations.activities }
+      _id: { $in: data.plan.recommendations.activities.map(a => a.id || a) }
     });
 
-    // Map IDs in daily itinerary to objects
+    // 3️⃣ Map daily itinerary to reference activity IDs
     const dailyItinerary = data.plan.recommendations.daily_itinerary.map(day => ({
       day: day.day,
       theme: day.theme,
-      activities: day.activities.map(actId =>
-        activityObjects.find(a => a._id.toString() === actId)
-      )
+      activities: day.activities
+        .map(act => {
+          const activityObj = activityObjects.find(a => a._id.toString() === (act.id || act).toString());
+          if (!activityObj) return null;
+
+          return {
+            activity: activityObj._id,       // <-- required by schema
+            time: act.time || "",
+            location: activityObj.location || ""
+          };
+        })
+        .filter(a => a !== null)
     }));
 
-    // 3️⃣ Send the updated plan to frontend
+
+    // 4️⃣ Save trip to DB
+    const trip = new TripRequest({
+      user: req.user._id,
+      destination,
+      start_date,
+      end_date,
+      budget,
+      hotels: hotelObjects.map(h => h._id),
+      itinerary: dailyItinerary,
+    });
+    await trip.save();
+
+    // 5️⃣ Respond with populated objects
     res.status(200).json({
       success: true,
       plan: {
         ...data.plan,
+        trip_id: trip._id,
         recommendations: {
           hotels: hotelObjects,
           activities: activityObjects,
@@ -74,6 +94,7 @@ router.post("/", auth, async (req, res, next) => {
     next(err);
   }
 });
+
 
 // ==============================
 // List trips for current user

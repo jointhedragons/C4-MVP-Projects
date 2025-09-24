@@ -20,6 +20,8 @@ async def root():
 async def create_travel_plan(request: TravelRequest):
     """Create personalized travel plan"""
     try:
+        travel_guide.load_data('hotels')
+        travel_guide.load_data('activities')
         plan = travel_guide.generate_travel_plan(request.message)
         return {
             "success": True,

@@ -3,7 +3,7 @@ const Hotel = require('../models/Hotel');
 const Activity = require('../models/Activity');
 
 async function seedHotels(deleteAll = true) {
-  await connectDB(process.env.MONGO_URI || 'mongodb://localhost:27017/ai_travel');
+  await connectDB(process.env.MONGO_URI || "mongodb+srv://yly741689:nodejs_1234@cluster0.8sgu0j1.mongodb.net/");
 
   if (deleteAll) {
     await Hotel.deleteMany({});
@@ -22,7 +22,7 @@ async function seedHotels(deleteAll = true) {
 }
 
 async function seedActivities(deleteAll = true) {
-  await connectDB(process.env.MONGO_URI || 'mongodb://localhost:27017/ai_travel');
+  await connectDB(process.env.MONGO_URI || "mongodb+srv://yly741689:nodejs_1234@cluster0.8sgu0j1.mongodb.net/");
 
   if (deleteAll) {
     await Activity.deleteMany({});

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-module.exports = async function(req, res, next) {
+authentication = async function(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(403).json({ message: 'No token' });
@@ -15,3 +15,14 @@ module.exports = async function(req, res, next) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 }
+
+function authorizeRoles(...roles) {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    next();
+  };
+}
+
+module.exports = { auth: authentication, authorizeRoles };

@@ -7,7 +7,7 @@ import uvicorn
 app = FastAPI(title="AI Travel Guide", version="1.0.0")
 
 # Initialize AI guide
-travel_guide = AITravelGuide()
+travel_guide = AITravelGuide(datasource='api', url='http://localhost:4000')
 
 class TravelRequest(BaseModel):
     message: str

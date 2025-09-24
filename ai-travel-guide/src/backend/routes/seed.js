@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const seedHotels = require("../seed/seed").seedHotels;
 const seedActivities = require("../seed/seed").seedActivities;
+const { auth, authorizeRoles } = require("../middleware/auth");
 
-router.post("/seed", async (req, res, next) => {
+router.post("/seed", auth, authorizeRoles("admin"), async (req, res, next) => {
   const { hotels = 0, activities = 0 } = req.query;
   try {
     const seeded = {};

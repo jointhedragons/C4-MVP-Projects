@@ -1,9 +1,13 @@
 const router = require("express").Router();
 const Activity = require("../models/Activity");
 const escReg = require("../utils/escapeRegex");
+const { auth, authorizeRoles } = require("../middleware/auth");
+const upload = require("../middleware/upload");
 
-// GET activities
-router.get("/activities", async (req, res, next) => {
+// ==============================
+// GET activities (all roles allowed, must be logged in)
+// ==============================
+router.get("/", async (req, res, next) => {
   try {
     const { 
       page = 1, 
@@ -24,7 +28,6 @@ router.get("/activities", async (req, res, next) => {
     if (minRating) q.rating = { $gte: Number(minRating) };
 
     const total = await Activity.countDocuments(q);
-
     const sortOrder = order === "desc" ? -1 : 1;
 
     const activities = await Activity.find(q)
@@ -37,15 +40,17 @@ router.get("/activities", async (req, res, next) => {
       count: activities.length, 
       page: Number(page), 
       limit: Number(limit), 
-      activities 
+      data: activities 
     });
   } catch (err) {
     next(err);
   }
 });
 
-// Get By ID
-router.get("/activities/:id", async (req, res, next) => {
+// ==============================
+// GET by ID (all roles allowed, must be logged in)
+// ==============================
+router.get("/:id", auth, async (req, res, next) => {
   try {
     const activity = await Activity.findById(req.params.id);
     if (!activity) return res.status(404).json({ message: "Activity not found" });
@@ -55,30 +60,42 @@ router.get("/activities/:id", async (req, res, next) => {
   }
 });
 
-// Create activity
-router.post("/activities", async (req, res, next) => {
+// ==============================
+// CREATE (admin + ai roles)
+// ==============================
+router.post("/", auth, authorizeRoles("admin", "ai"), upload.single("image"), async (req, res) => {
   try {
-    const newActivity = new Activity(req.body);
-    await newActivity.save();
-    res.status(201).json(newActivity);
+    const activity = new Activity({
+      ...req.body,
+      image: req.file ? `/uploads/${req.file.filename}` : null,
+    });
+    await activity.save();
+    res.status(201).json(activity);
   } catch (err) {
-    next(err);
+    res.status(400).json({ message: err.message });
   }
 });
 
-// Update activity
-router.put("/activities/:id", async (req, res, next) => {
+// ==============================
+// UPDATE (admin + ai roles)
+// ==============================
+router.put("/:id", auth, authorizeRoles("admin", "ai"), upload.single("image"), async (req, res) => {
   try {
-    const updatedActivity = await Activity.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedActivity) return res.status(404).json({ message: "Activity not found" });
-    res.json(updatedActivity);
+    const activity = await Activity.findByIdAndUpdate(
+      req.params.id,
+      { image: req.file ? `/uploads/${req.file.filename}` : null },
+      { new: true }
+    );
+    res.json(activity);
   } catch (err) {
-    next(err);
+    res.status(400).json({ message: err.message });
   }
 });
 
-// Delete activity
-router.delete("/activities/:id", async (req, res, next) => {
+// ==============================
+// DELETE (only admin)
+// ==============================
+router.delete("/:id", auth, authorizeRoles("admin"), async (req, res, next) => {
   try {
     const deletedActivity = await Activity.findByIdAndDelete(req.params.id);
     if (!deletedActivity) return res.status(404).json({ message: "Activity not found" });

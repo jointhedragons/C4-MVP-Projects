@@ -96,22 +96,50 @@ router.post("/", auth, async (req, res, next) => {
 });
 
 
+// // ==============================
+// // List trips for current user
+// // // ==============================
+// router.get("/", auth, async (req, res, next) => {
+//   try {
+//     const { page = 1, limit = 20 } = req.query;
+//     const trips = await TripRequest.find({ user: req.user._id })
+//       .populate("hotels")
+//       .populate("itinerary.activities.activity") 
+//       .sort("-createdAt")
+//       .skip((page - 1) * limit)
+//       .limit(parseInt(limit));
+//     // res.json({ count: trips.length, trips });
+//     res.json({ count: total, trips });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
 // ==============================
 // List trips for current user
 // ==============================
 router.get("/", auth, async (req, res, next) => {
   try {
     const { page = 1, limit = 20 } = req.query;
+
+    // 1️⃣ احسب العدد الكلي للرحلات
+    const total = await TripRequest.countDocuments({ user: req.user._id });
+
+    // 2️⃣ رجع الرحلات بالصفحة المطلوبة
     const trips = await TripRequest.find({ user: req.user._id })
       .populate("hotels")
+      .populate("itinerary.activities.activity") 
       .sort("-createdAt")
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
-    res.json({ count: trips.length, trips });
+
+    // ✅ رجع العدد الكلي + الرحلات
+    res.json({ total, trips });
   } catch (err) {
     next(err);
   }
 });
+
 
 // ==============================
 // Get single trip (owner only, or admin/ai roles)

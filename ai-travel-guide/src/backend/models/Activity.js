@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema({
-  name: String,
-  destination: String,
-  description: String,
-  duration_minutes: Number,
+  name: { type: String, required: true },
+  destination: { type: String, required: true },
+  description: { type: String },
+  duration_minutes: { type: Number },
   tags: [String],
-  rating: Number,
+  rating: { type: Number, default: 0, min: 0, max: 5 },
   image: { type: String },
 }, { timestamps: true });
 
@@ -14,8 +14,10 @@ activitySchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
   transform: (doc, ret) => {
-    ret.id = ret._id.toString();
-    delete ret._id;
+    if (ret._id) {
+      ret.id = ret._id.toString();
+      delete ret._id;
+    }
   }
 });
 

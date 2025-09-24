@@ -1,0 +1,65 @@
+Survey Purpose
+
+Thank you for taking a few moments to share your feedback. This survey aims to understand your satisfaction with our products/services. Your honest opinions will help us improve and better serve you.
+
+Key Questions
+
+1. Overall, how satisfied are you with your recent experience?
+   A. Very Satisfied
+   B. Satisfied
+   C. Neutral
+   D. Dissatisfied
+   E. Very Dissatisfied
+
+2. How likely are you to recommend our company/product to a friend or colleague?
+   (On a scale of 0 to 10, where 0 is Not at all Likely and 10 is Extremely Likely)
+   0  1  2  3  4  5  6  7  8  9  10
+
+3. How would you rate the quality of our product/service?
+   A. Excellent
+   B. Good
+   C. Average
+   D. Fair
+   E. Poor
+
+4. How easy was it to find the information you needed on our website/in our store?
+   A. Very Easy
+   B. Easy
+   C. Neutral
+   D. Difficult
+   E. Very Difficult
+
+5. How satisfied are you with the speed of our service/delivery?
+   A. Very Satisfied
+   B. Satisfied
+   C. Neutral
+   D. Dissatisfied
+   E. Very Dissatisfied
+
+6. How would you rate the helpfulness of our customer support team?
+   A. Excellent
+   B. Good
+   C. Average
+   D. Fair
+   E. Poor
+
+7. What did you like most about your experience?
+   [Open-ended text box]
+
+8. What could we improve to enhance your experience?
+   [Open-ended text box]
+
+9. Did our product/service meet your expectations?
+   A. Yes, it exceeded my expectations
+   B. Yes, it met my expectations
+   C. No, it did not meet my expectations
+
+10. How likely are you to purchase from us again?
+    (On a scale of 0 to 10, where 0 is Not at all Likely and 10 is Extremely Likely)
+    0  1  2  3  4  5  6  7  8  9  10
+
+Closing Statement
+
+Thank you for taking the time to complete our survey. Your feedback is incredibly valuable to us.
+
+Your voice matters

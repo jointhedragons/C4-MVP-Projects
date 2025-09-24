@@ -1,3 +1,4 @@
+import { supabase } from "../lib/supabaseClient";
 import { createContext, useContext, useReducer, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -35,11 +36,16 @@ function AuthProvider({ children }) {
   }, [user, isAuth]);
 
   async function login(email, password) {
-    const res = await fetch(
-      `http://localhost:8000/users?email=${email}&password=${password}`
-    );
-    const users = await res.json();
-    if (users.length > 0) {
+    let { data: users, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email)
+      .eq("password", password);
+
+    if (error) {
+      return error;
+    }
+    if (users && users.length > 0) {
       dispatch({ type: "login", payload: users[0] });
       return true;
     } else {
@@ -48,22 +54,36 @@ function AuthProvider({ children }) {
   }
 
   async function signup({ name, email, password }) {
-    //check emai exist
-    const resCheck = await fetch(`http://localhost:8000/users?email=${email}`);
-    const exists = await resCheck.json();
-    if (exists.length > 0) {
+    // Check if email already exists
+    const { data: exists, error: checkError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email);
+
+    if (checkError) {
+      return { success: false, message: "Error checking email" };
+    }
+    if (exists && exists.length > 0) {
       return { success: false, message: "Email already registered" };
     }
-    //Add user
-    const res = await fetch("http://localhost:8000/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-    const user = await res.json();
-    // Auto login
-    dispatch({ type: "login", payload: user });
-    return { success: true, user };
+
+    // Insert new user
+    const { data, error } = await supabase
+      .from("users")
+      .insert([{ name: name, email: email, password: password }])
+      .select();
+
+    if (error) {
+      return { success: false, message: "Signup failed" };
+    }
+
+    // Auto login after signup
+    if (data && data.length > 0) {
+      dispatch({ type: "login", payload: data[0] });
+      return { success: true, user: data[0] };
+    }
+
+    return { success: false, message: "Signup failed" };
   }
 
   function logout() {

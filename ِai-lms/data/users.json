@@ -41,6 +41,12 @@
       "email": "arwa@gmail.com",
       "password": "12345678",
       "id": 7
+    },
+    {
+      "name": "mohamed Ayman",
+      "email": "jack@example.com",
+      "password": "12345678",
+      "id": 8
     }
   ]
 }

@@ -7,6 +7,8 @@ import LoginSlice from "./features/auth/LoginSlice";
 import SignupSlice from "./features/auth/SignupSlice";
 import ProfilePage from "./pages/ProfilePage";
 import CoursesPage from "./pages/CoursesPage";
+import { CoursesProvider } from "./contexts/CoursesContext";
+import { MyCoursesProvider } from "./contexts/MyCoursesContext";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +41,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthProvider>
-      <RouterProvider router={router}></RouterProvider>;
+      <CoursesProvider>
+        <MyCoursesProvider>
+          <RouterProvider router={router}></RouterProvider>;
+        </MyCoursesProvider>
+      </CoursesProvider>
     </AuthProvider>
   );
 }

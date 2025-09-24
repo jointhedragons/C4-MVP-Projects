@@ -52,9 +52,9 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedRoute>
+           
               <Home />
-            </ProtectedRoute>
+          
           }
         />
         <Route
@@ -76,9 +76,8 @@ function App() {
         <Route
           path="/blogs"
           element={
-            <ProtectedRoute>
               <Blogs />
-            </ProtectedRoute>
+           
           }
         />
 

@@ -10,4 +10,13 @@ const activitySchema = new mongoose.Schema({
   image: { type: String },
 }, { timestamps: true });
 
+activitySchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: (doc, ret) => {
+    ret.id = ret._id.toString();
+    delete ret._id;
+  }
+});
+
 module.exports = mongoose.model('Activity', activitySchema);

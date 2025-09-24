@@ -13,8 +13,8 @@ class AITravelGuide:
     """
 
     EXPECTED_COLUMNS = {
-        "hotels": ["_id", "name", "destination", "price_per_night", "rating", "location"],
-        "activities": ["_id", "name", "destination", "description", "duration_minutes", "tags", "rating"],
+        "hotels": ["id", "name", "destination", "price_per_night", "rating", "location"],
+        "activities": ["id", "name", "destination", "description", "duration_minutes", "tags", "rating"],
     }
 
     DEFAULT_BUDGET_RANGES = {
@@ -117,7 +117,7 @@ class AITravelGuide:
         else:
             df['tags'] = [[] for _ in range(len(df))]
 
-        # make sure columns are in expected order (keep _id if available)
+        # make sure columns are in expected order (keep id if available)
         for col in expected:
             if col not in df.columns:
                 df[col] = None
@@ -323,7 +323,7 @@ class AITravelGuide:
             price = float(row.get('price_per_night') or 0)
             total_cost = price * rooms * days
             recs.append({
-                'id': str(row['_id']) if row.get('_id') is not None else None,
+                'id': str(row['id']) if row.get('id') is not None else None,
                 'name': row.get('name') or 'Unknown Hotel',
                 'price_per_night': price,
                 'rating': float(row.get('rating') or 0),
@@ -384,7 +384,7 @@ class AITravelGuide:
             duration_minutes = int(row.get('duration_minutes') or 120)
             duration_hours = max(1, duration_minutes // 60)
             results.append({
-                'id': str(row['_id']) if row.get('_id') is not None else None,
+                'id': str(row['id']) if row.get('id') is not None else None,
                 'name': row.get('name') or 'Attraction',
                 'description': row.get('description') or '',
                 'tags': row.get('tags') or [],
@@ -430,39 +430,68 @@ class AITravelGuide:
             daily.append({'day': day, 'theme': theme, 'activities': activities})
         return daily
 
+    def _safe_int(self, value, default=0):
+        try:
+            if value is None:
+                return default
+            if isinstance(value, str) and value.strip() == "":
+                return default
+            if isinstance(value, (int, float)):
+                if math.isnan(value):
+                    return default
+                return int(value)
+            return int(float(value))
+        except Exception:
+            return default
+
+
     def calculate_budget(self, hotels: List[Dict], duration_days: int, budget_level: str, group_size: int) -> Dict:
+        # Sanitize inputs
+        duration_days = self._safe_int(duration_days, 1)
+        group_size = self._safe_int(group_size, 1)
+        if budget_level not in ("low", "medium", "high"):
+            budget_level = "medium"
+
+        # Rooms per 2 people
         rooms = math.ceil(max(1, group_size) / 2)
-        # hotels list might contain total_cost already
+
+        # Hotel cost calculation
         total_hotel_cost = 0
         if hotels:
             for h in hotels:
-                if 'total_cost' in h and h['total_cost']:
-                    total_hotel_cost += h['total_cost']
+                cost = h.get("total_cost")
+                if cost and not math.isnan(cost):
+                    total_hotel_cost += self._safe_int(cost, 0)
                 else:
-                    price = h.get('price_per_night') or 0
+                    price = self._safe_int(h.get("price_per_night"), 0)
                     total_hotel_cost += price * rooms * duration_days
         else:
-            base_room_price = 75 if budget_level == 'medium' else 40 if budget_level == 'low' else 200
+            base_room_price = 75 if budget_level == "medium" else 40 if budget_level == "low" else 200
             total_hotel_cost = base_room_price * rooms * duration_days
 
-        per_person_food = 300 if budget_level == 'low' else 600 if budget_level == 'medium' else 1200
-        per_person_activity = 200 if budget_level == 'low' else 400 if budget_level == 'medium' else 900
+        # Food & activities
+        per_person_food = 300 if budget_level == "low" else 600 if budget_level == "medium" else 1200
+        per_person_activity = 200 if budget_level == "low" else 400 if budget_level == "medium" else 900
 
         food_budget = duration_days * per_person_food * group_size
         activities_budget = duration_days * per_person_activity * group_size
 
+        # Transport (per 4 people a vehicle/day)
         transport_per_day_group = 200
         transportation = duration_days * transport_per_day_group * max(1, math.ceil(group_size / 4))
 
+        # Total
         total_budget = total_hotel_cost + food_budget + activities_budget + transportation
+
         return {
-            'total_budget': int(total_budget),
-            'hotel_cost': int(total_hotel_cost),
-            'food_budget': int(food_budget),
-            'activities_budget': int(activities_budget),
-            'transportation': int(transportation),
-            'daily_average': int(total_budget / max(1, duration_days))
+            "total_budget": int(total_budget),
+            "hotel_cost": int(total_hotel_cost),
+            "food_budget": int(food_budget),
+            "activities_budget": int(activities_budget),
+            "transportation": int(transportation),
+            "daily_average": int(total_budget / max(1, duration_days)),
         }
+
 
     # -----------------------
     # Output & orchestration
@@ -492,7 +521,7 @@ class AITravelGuide:
         lines.append("## 🏨 Recommended Hotels")
         if hotels:
             for i, h in enumerate(hotels[:3], 1):
-                lines.append(f"{i}. **{h['name']}** — {h['price_per_night']:,} per night — Rating: {h['rating']} (Total: {int(h['total_cost'])})")
+                lines.append(f"{i}. **{h['name']}** — {h['price_per_night']:,} per night — Rating: {h['rating']} (Total: {self._safe_int(h['total_cost'])})")
         else:
             lines.append("No hotel recommendations available.")
 
@@ -533,16 +562,33 @@ class AITravelGuide:
             hotels = self.recommend_hotels(analysis)
             attractions = self.recommend_attractions(analysis)
             itinerary = self.create_daily_itinerary(attractions, analysis['duration_days'])
-            budget = self.calculate_budget(hotels, analysis['duration_days'], analysis['budget_level'], analysis['group_size'])
+            budget = self.calculate_budget(
+                hotels, 
+                analysis['duration_days'], 
+                analysis['budget_level'], 
+                analysis['group_size']
+            )
             response_message = self.generate_response_message(analysis, hotels, itinerary, budget)
+
+            hotel_ids = [h['id'] for h in hotels if h.get('id') is not None]
+            activity_ids = [a['id'] for a in attractions if a.get('id') is not None]
+
+            # 🔄 Replace each activity object with just its ID
+            itinerary_ids = []
+            for day in itinerary:
+                itinerary_ids.append({
+                    "day": day["day"],
+                    "theme": day["theme"],
+                    "activities": [a["id"] for a in day["activities"] if a.get("id") is not None]
+                })
 
             return {
                 'success': True,
                 'analysis': analysis,
                 'recommendations': {
-                    'hotels': hotels,
-                    'attractions': attractions,
-                    'daily_itinerary': itinerary,
+                    'hotels': hotel_ids,
+                    'activities': activity_ids,
+                    'daily_itinerary': itinerary_ids,  # <-- now only IDs
                 },
                 'budget': budget,
                 'response_message': response_message,

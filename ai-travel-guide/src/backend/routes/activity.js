@@ -7,7 +7,7 @@ const upload = require("../middleware/upload");
 // ==============================
 // GET activities (all roles allowed, must be logged in)
 // ==============================
-router.get("/", auth, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const { 
       page = 1, 

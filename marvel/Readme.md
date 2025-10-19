@@ -1,8 +1,8 @@
 # AI Talent Matching - Team Marvel
 
 ## Project Overview
-**Lead:** Abdelrahman Omar Mohamed Farid Elgendy  
-**Team Members:** Karim Ashraf Ibrahim, Norhan Walid Hosney, Ahmed Reda Abdulsalam Ibrahim  
+**Lead:** Karim Ashraf Ibrahim
+**Team Members:** Abdelrahman Omar Mohamed Farid Elgendy, Ahmed Reda Abdulsalam Ibrahim  
 **Cycle:** 4  
 **Project Code:** C41  
 **Timeline:** 2025-09-17 - 2025-09-19 (3 days)
